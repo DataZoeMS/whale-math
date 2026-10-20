@@ -33,10 +33,13 @@ There are no time limits or penalties for incorrect answers.
 Open either tool below the whale without restarting the problem or changing
 your score:
 
-- **Multiplication table:** a reference grid from zero through your selected
-  range, including every product. Row and column headers stay visible as you
-  scroll, and selected focus numbers are highlighted. The current problem is
-  repeated above the table so you can look up the answer yourself.
+- **Helper table:** the symbol and values automatically follow the current
+  addition, subtraction, multiplication, or division problem. Find the first
+  number down the side and the second across the top to look up the answer.
+  Headers stay visible as you scroll, and selected focus numbers are highlighted.
+  Division includes the larger starting numbers needed for your selected facts;
+  dashes mark non-whole-number division or subtraction below zero. The current
+  problem is repeated above the table.
 - **Scratch pad:** draw with a finger, Apple Pencil, or mouse, or choose a
   **Humpback stamp** or **Orca stamp** and tap to place one whale at a time.
   Mix stamps and drawing to build your own groups. **Undo** removes the last

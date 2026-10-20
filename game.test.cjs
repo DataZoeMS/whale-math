@@ -8,7 +8,7 @@ const html = readFileSync(join(__dirname, "index.html"), "utf8");
 const source = html.match(/<script id="game-script">([\s\S]*?)<\/script>/)[1];
 const context = vm.createContext({});
 vm.runInContext(source, context);
-const { makeFacts, makeChoices, makeMultiplicationTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES } = context.WhaleMath;
+const { makeFacts, makeChoices, makeHelperTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES } = context.WhaleMath;
 const operations = ["add", "subtract", "multiply", "divide"];
 const config = (limit, ops = operations, focus = [], order = "sequential") => ({ limit, operations: ops, focus, order });
 
@@ -145,19 +145,44 @@ test("ocean is the default palette and older saved settings migrate without losi
   assert.throws(() => validateSettings({ ...old, palette: null }));
 });
 
-test("the reference multiplication table contains every product including zeros", () => {
+test("helper tables use the current operation and cover every selected practice fact", () => {
   for (const limit of LIMITS) {
-    const rows = makeMultiplicationTable(limit);
-    assert.equal(rows.length, limit + 1);
-    for (let row = 0; row <= limit; row++) {
-      assert.equal(rows[row].length, limit + 1);
-      for (let column = 0; column <= limit; column++) {
-        assert.equal(rows[row][column], row * column);
+    for (const operation of operations) {
+      for (const focus of [[], [2, 4]]) {
+        const { rows, columns, values } = makeHelperTable(operation, limit, focus);
+        assert.equal(new Set(rows).size, rows.length);
+        assert.ok(rows.every((n, i) => !i || rows[i - 1] < n));
+        assert.equal(columns.length, operation === "divide" ? limit : limit + 1);
+        for (let r = 0; r < rows.length; r++) {
+          assert.equal(values[r].length, columns.length);
+          for (let c = 0; c < columns.length; c++) {
+            const a = rows[r], b = columns[c];
+            const expected = operation === "add" ? a + b
+              : operation === "subtract" ? (a >= b ? a - b : null)
+                : operation === "multiply" ? a * b
+                  : (a % b === 0 ? a / b : null);
+            assert.equal(values[r][c], expected);
+          }
+        }
+        for (const fact of makeFacts(config(limit, [operation], focus))) {
+          const r = rows.indexOf(fact.a), c = columns.indexOf(fact.b);
+          assert.ok(r >= 0 && c >= 0, `${fact.key} must be in the helper table`);
+          assert.equal(values[r][c], fact.answer);
+        }
       }
     }
-    assert.equal(rows[limit][limit], limit * limit);
   }
-  assert.throws(() => makeMultiplicationTable(100));
+  assert.throws(() => makeHelperTable("multiply", 100));
+  assert.throws(() => makeHelperTable("invalid", 10));
+});
+
+test("division helpers include large dividends and subtraction shows no negative answers", () => {
+  const division = makeHelperTable("divide", 20, [20]);
+  assert.equal(division.values[division.rows.indexOf(400)][division.columns.indexOf(20)], 20);
+  assert.equal(division.columns.includes(0), false);
+  const subtraction = makeHelperTable("subtract", 10);
+  assert.equal(subtraction.values[4][2], 2);
+  assert.equal(subtraction.values[2][4], null);
 });
 
 test("the optional timer formats elapsed time without rounding up or wrapping hours", () => {

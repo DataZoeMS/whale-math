@@ -251,6 +251,8 @@
     .tool-panel p { color: var(--cp-text-muted); font-size: 14px; line-height: 1.5; }
     .tool-problem { font-weight: 750; color: var(--cp-accent) !important; font-size: 20px !important; }
     .table-scroll { max-height: 360px; overflow: auto; border: 1px solid var(--cp-border); border-radius: 10px; overscroll-behavior: contain; }
+    .table-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .table-operation { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; background: var(--cp-accent-soft); color: var(--cp-accent); font-size: 28px; font-weight: 750; }
     .times-table { width: 100%; border-spacing: 0; font-variant-numeric: tabular-nums; text-align: center; }
     .times-table th, .times-table td { min-width: 40px; height: 38px; padding: 8px; border-right: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
     .times-table th { position: sticky; background: var(--cp-bg-elevated); color: var(--cp-text); }
@@ -258,6 +260,7 @@
     .times-table tbody th { left: 0; z-index: 1; }
     .times-table thead th:first-child { left: 0; z-index: 3; }
     .times-table th.focus-number { background: var(--cp-accent); color: var(--cp-accent-fg); }
+    .times-table td.unavailable { color: var(--cp-text-soft); }
     .scratch-toolbar { align-items: center; margin-bottom: 12px; }
     .scratch-toolbar .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; }
     .scratch-toolbar .button:disabled { opacity: .5; }
@@ -434,7 +437,7 @@
         <div class="feedback" id="feedback" role="status" aria-live="polite">Which bubble has the answer?</div>
       </section>
       <div class="learning-tools" aria-label="Optional learning tools">
-        <button type="button" class="button" id="table-toggle" aria-expanded="false" aria-controls="table-panel">Show multiplication table</button>
+        <button type="button" class="button" id="table-toggle" aria-expanded="false" aria-controls="table-panel">Show helper table</button>
         <button type="button" class="button" id="scratch-toggle" aria-expanded="false" aria-controls="scratch-panel">Show scratch pad</button>
       </div>
       <div class="practice-timer" role="group" aria-label="Optional practice timer">
@@ -445,10 +448,10 @@
         <span id="timer-status" class="sr-only" role="status">Timer is stopped.</span>
       </div>
       <section class="tool-panel" id="table-panel" aria-labelledby="table-title" hidden>
-        <h3 id="table-title">Multiplication table</h3>
+        <div class="table-heading"><h3 id="table-title">Helper table</h3><span class="table-operation" id="table-operation" aria-label="Current table operation"></span></div>
         <p class="tool-problem" id="table-problem"></p>
-        <p id="table-instructions">Find the first number down the left side and the second across the top. Where they meet is the product.</p>
-        <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable multiplication table">
+        <p id="table-instructions">Find the first number down the left side and the second across the top. Where they meet is the answer.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable helper table">
           <table class="times-table" id="times-table"></table>
         </div>
       </section>
@@ -607,10 +610,21 @@
       return [...values].sort((a, b) => a - b);
     }
 
-    function makeMultiplicationTable(limit) {
-      if (!LIMITS.includes(limit)) throw new Error("Choose a supported table range.");
-      return Array.from({ length: limit + 1 }, (_, row) =>
-        Array.from({ length: limit + 1 }, (_, column) => row * column));
+    function makeHelperTable(operation, limit, focus = []) {
+      const config = { operations: [operation], limit, focus, order: "sequential" };
+      validateSettings(config);
+      const numbers = Array.from({ length: limit + 1 }, (_, n) => n);
+      const rows = operation === "divide"
+        ? [...new Set(makeFacts(config).map(fact => fact.a))].sort((a, b) => a - b)
+        : numbers;
+      const columns = operation === "divide" ? numbers.slice(1) : numbers;
+      const values = rows.map(a => columns.map(b => {
+        if (operation === "add") return a + b;
+        if (operation === "subtract") return a >= b ? a - b : null;
+        if (operation === "multiply") return a * b;
+        return a % b === 0 ? a / b : null;
+      }));
+      return { rows, columns, values };
     }
 
     function formatElapsed(milliseconds) {
@@ -670,7 +684,7 @@
       return { before, after, start, finish, total: whales.length };
     }
 
-    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, makeMultiplicationTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES });
+    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, makeHelperTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES });
 
     if (typeof document !== "undefined") {
       const $ = id => document.getElementById(id);
@@ -706,23 +720,29 @@
         const facts = makeFacts(settings);
         deck = settings.order === "shuffle" ? shuffle(facts) : facts;
         index = 0; completed = 0; correct = 0; cycle = 1;
-        renderMultiplicationTable();
         renderQuestion(focusQuestion);
       }
 
-      function renderMultiplicationTable() {
+      function renderHelperTable() {
         const table = $("times-table");
+        const key = `${current.op}:${settings.limit}:${settings.focus.join(",")}`;
+        if (table.dataset.key === key) return;
+        const model = makeHelperTable(current.op, settings.limit, settings.focus);
+        const operation = OPERATIONS[current.op];
+        $("table-operation").textContent = operation.symbol;
+        $("table-operation").setAttribute("aria-label", operation.name);
         table.replaceChildren();
         const caption = document.createElement("caption");
         caption.className = "sr-only";
-        caption.textContent = `Multiplication facts from zero through ${settings.limit}. Highlighted headers are your focus numbers.`;
+        caption.textContent = `${operation.name} helper table. First number down the side, second number across the top. Highlighted headers are your focus numbers.`;
         const head = document.createElement("thead");
         const headers = document.createElement("tr");
         const corner = document.createElement("th");
         corner.scope = "col";
-        corner.textContent = "\u00d7";
+        corner.textContent = operation.symbol;
+        corner.setAttribute("aria-label", operation.name);
         headers.append(corner);
-        for (let n = 0; n <= settings.limit; n++) {
+        for (const n of model.columns) {
           const th = document.createElement("th");
           th.scope = "col";
           th.textContent = n;
@@ -731,32 +751,40 @@
         }
         head.append(headers);
         const body = document.createElement("tbody");
-        for (const [row, products] of makeMultiplicationTable(settings.limit).entries()) {
+        for (const [rowIndex, row] of model.rows.entries()) {
           const tr = document.createElement("tr");
           const label = document.createElement("th");
           label.scope = "row";
           label.textContent = row;
           if (settings.focus.includes(row)) label.className = "focus-number";
           tr.append(label);
-          for (const product of products) {
+          for (const result of model.values[rowIndex]) {
             const cell = document.createElement("td");
-            cell.textContent = product;
+            cell.textContent = result === null ? "\u2014" : result;
+            if (result === null) {
+              cell.className = "unavailable";
+              cell.setAttribute("aria-label", current.op === "subtract" ? "Answer would be below zero" : "Not a whole-number answer");
+            }
             tr.append(cell);
           }
           body.append(tr);
         }
         table.append(caption, head, body);
+        table.dataset.key = key;
+        table.parentElement.scrollTop = 0;
+        table.parentElement.scrollLeft = 0;
       }
 
       function updateToolProblems() {
         const problem = `Your problem: ${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = ${answered ? current.answer : "?"}`;
         $("table-problem").textContent = problem;
         $("scratch-problem").textContent = problem;
-        $("table-instructions").textContent = current.op === "multiply"
-          ? "Find the first number down the left side and the second across the top. Where they meet is the product. Scroll to see more numbers."
+        const extra = current.op === "subtract"
+          ? " A dash means the answer would go below zero."
           : current.op === "divide"
-            ? `Find column ${current.b}, then look down it for ${current.a}. The row number is your answer. Scroll to see more numbers.`
-            : "This reference table is for multiplication and division. You can use the scratch pad to work through your addition or subtraction problem.";
+            ? " Rows include the starting numbers in your selected division facts. A dash means the answer is not a whole number."
+            : "";
+        $("table-instructions").textContent = `Find ${current.a} down the left side and ${current.b} across the top. Where they meet is the answer.${extra} Scroll to see more numbers.`;
       }
 
       let timerElapsed = 0, timerStartedAt = null, timerInterval = null;
@@ -800,7 +828,7 @@
         const show = $("table-panel").hidden;
         $("table-panel").hidden = !show;
         $("table-toggle").setAttribute("aria-expanded", String(show));
-        $("table-toggle").textContent = `${show ? "Hide" : "Show"} multiplication table`;
+        $("table-toggle").textContent = `${show ? "Hide" : "Show"} helper table`;
       });
 
       const scratchItems = [];
@@ -991,6 +1019,7 @@
         cancelLesson();
         clearTimeout(entranceTimer);
         current = deck[index];
+        renderHelperTable();
         answered = false;
         arriving = true;
         $("lesson").hidden = true;
