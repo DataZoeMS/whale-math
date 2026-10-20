@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Pop answer bubbles and learn addition, subtraction, multiplication and division with friendly whales. A free, touch-friendly math game.">
+  <title>Whale Math - A little ocean of discovery</title>
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
+    button, input, select { font: inherit; }
+    button, select, input, label { -webkit-tap-highlight-color: var(--cp-highlight); }
+    button, summary, select { touch-action: manipulation; }
+    button { cursor: pointer; }
+    button:disabled { cursor: default; }
+    :focus-visible { outline: 3px solid var(--cp-accent); outline-offset: 5px; }
+    a { color: var(--cp-accent); }
+    .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+    .app { max-width: 1080px; margin: auto; padding: 24px max(24px, env(safe-area-inset-right)) 32px max(24px, env(safe-area-inset-left)); }
+    .masthead, .brand, .toolbar, .legend, .actions, .settings-head { display: flex; align-items: center; gap: 12px; }
+    .masthead { justify-content: space-between; gap: 20px; }
+    .brand-icon { width: 56px; height: 48px; color: var(--cp-accent); }
+    .brand h1 { margin: 0; font-size: 25px; letter-spacing: -1px; }
+    .brand p { margin: 2px 0 0; font-size: 13px; color: var(--cp-text-muted); }
+    .pill { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 24px; background: var(--cp-surface); border: 1px solid var(--cp-border); font-size: 14px; font-weight: 600; }
+    .button { min-height: 48px; padding: 12px 20px; border-radius: 10px; background: var(--cp-surface); border: 1px solid var(--cp-border-strong); color: var(--cp-text); font-weight: 650; }
+    .button:hover { background: var(--cp-surface-soft); }
+    .button.primary { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); }
+    .button.primary:hover { background: var(--cp-accent-hover); }
+    .intro { margin: 30px 0 20px; text-align: center; }
+    .eyebrow { text-transform: uppercase; letter-spacing: 2px; color: var(--cp-accent); font-size: 11px; font-weight: 750; }
+    .intro h2 { font-size: clamp(26px, 4vw, 36px); letter-spacing: -1px; margin: 8px 0; }
+    .intro p { color: var(--cp-text-muted); margin: 0; }
+    .ocean { position: relative; overflow: clip; border: 1px solid var(--cp-border); border-radius: 16px; background: var(--cp-bg-elevated); padding: 20px 28px 24px; }
+    .ocean::before { content: ""; position: absolute; height: 180px; width: 100%; left: 0; bottom: -110px; border-radius: 50%; background: var(--cp-accent-soft); pointer-events: none; }
+    .round-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--cp-text-muted); font-size: 13px; position: relative; z-index: 1; }
+    .round-meta strong { color: var(--cp-accent); font-weight: 650; }
+    .host { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 228px; }
+    .host.enter { animation: swim-in .85s cubic-bezier(.16, 1, .3, 1) both; }
+    .big-whale { width: clamp(160px, 30vw, 280px); height: 170px; color: var(--cp-accent); transform: rotate(-6deg); animation: bob 5s ease-in-out infinite; }
+    .question { position: relative; min-width: 255px; text-align: center; padding: 24px 28px; background: var(--cp-surface); border: 2px solid var(--cp-border); border-radius: 24px 24px 24px 4px; }
+    .question .hint { font-size: 13px; font-weight: 650; color: var(--cp-text-muted); margin-bottom: 4px; }
+    .equation { font-size: clamp(32px, 5vw, 48px); font-weight: 750; white-space: nowrap; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+    .question-mark { color: var(--cp-accent); }
+    .bubble-decor { position: absolute; border: 2px solid var(--cp-border); border-radius: 50%; width: 14px; height: 14px; left: 9%; top: 44%; animation: rise 6s ease-in-out infinite; pointer-events: none; }
+    .bubble-decor.two { left: auto; right: 8%; width: 25px; height: 25px; top: 64%; animation-delay: -3s; }
+    .bubble-decor.three { left: 18%; width: 9px; height: 9px; top: 14%; animation-delay: -1s; }
+    .answers { display: flex; justify-content: center; gap: clamp(12px, 4vw, 42px); position: relative; padding: 0 0 20px; }
+    .answer { width: clamp(88px, 14vw, 124px); aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--cp-border-strong); color: var(--cp-text); background: radial-gradient(circle at 28% 24%, var(--cp-surface) 0 8%, var(--cp-bg-elevated) 9% 55%, var(--cp-accent-soft)); position: relative; font-size: 36px; font-weight: 750; transition: transform .15s, border-color .15s; }
+    .answer::before { content: ""; position: absolute; left: 20%; top: 14%; width: 22%; height: 10%; border-top: 3px solid var(--cp-border); border-radius: 50%; transform: rotate(-30deg); }
+    .answer:not(:disabled):hover, .answer:not(:disabled):active { transform: scale(1.08); border-color: var(--cp-accent); }
+    .answer.correct { border: 4px solid var(--cp-success); background: var(--cp-surface); }
+    .answer.incorrect { border: 4px dashed var(--cp-danger); }
+    .answer .answer-label { display: block; font-size: 11px; margin-top: 2px; font-weight: 750; }
+    .answer:disabled:not(.correct):not(.incorrect) { opacity: .5; }
+    .feedback { text-align: center; min-height: 32px; font-size: 16px; font-weight: 650; position: relative; }
+    .feedback.good { color: var(--cp-success); }
+    .feedback.try { color: var(--cp-text); }
+    .lesson { margin-top: 20px; padding: 24px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; }
+    .lesson-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .lesson h3 { margin: 4px 0; font-size: 24px; letter-spacing: -.5px; }
+    .legend { font-size: 12px; color: var(--cp-text-muted); gap: 14px; }
+    .legend span { display: flex; align-items: center; gap: 4px; }
+    .legend svg { width: 36px; height: 24px; }
+    .humpback { color: var(--cp-accent); }
+    .orca { color: var(--cp-text); }
+    .stage-description { min-height: 48px; margin: 16px 0; color: var(--cp-text-muted); font-size: 16px; line-height: 1.5; }
+    .pods { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; align-items: start; }
+    .pod { min-height: 100px; border: 2px solid var(--cp-border); border-radius: 12px; padding: 12px; background: var(--cp-bg-elevated); }
+    .pod.removed { border-style: dashed; background: var(--cp-surface-soft); }
+    .pod h4 { margin: 0 0 8px; font-size: 14px; }
+    .whales { display: flex; flex-wrap: wrap; gap: 4px; min-height: 48px; align-content: center; align-items: center; }
+    .mini-whale { width: 52px; height: 38px; flex: 0 0 auto; }
+    .pods.compact .mini-whale { width: 36px; height: 28px; }
+    .empty { color: var(--cp-text-soft); font-size: 14px; padding: 12px 0; }
+    .actions { justify-content: space-between; flex-wrap: wrap; margin-top: 20px; }
+    .step-note { color: var(--cp-text-muted); font-size: 13px; }
+    .journey { display: flex; justify-content: space-between; align-items: center; margin: 20px 4px; gap: 12px; }
+    .journey p { margin: 0; font-size: 13px; color: var(--cp-text-muted); }
+    .pearls { display: flex; gap: 6px; }
+    .pearl { width: 11px; height: 11px; border-radius: 50%; background: var(--cp-border); }
+    .pearl.filled { background: var(--cp-accent); }
+    .footer { text-align: center; font-size: 12px; color: var(--cp-text-soft); line-height: 1.8; }
+    .footer a { font-weight: 650; text-decoration: none; }
+    .settings { width: min(640px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid var(--cp-border); border-radius: 16px; color: var(--cp-text); background: var(--cp-surface); overscroll-behavior: contain; }
+    .settings::backdrop { background: var(--cp-overlay); }
+    .settings-head { justify-content: space-between; }
+    .settings h2 { margin: 0; font-size: 26px; }
+    .settings fieldset { border: 0; padding: 0; margin: 24px 0; min-width: 0; }
+    .settings legend, .field-title { display: block; font-weight: 750; font-size: 15px; margin-bottom: 10px; }
+    .settings p { font-size: 13px; color: var(--cp-text-muted); line-height: 1.5; }
+    .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .toggle { display: flex; gap: 10px; align-items: center; min-height: 52px; border: 1px solid var(--cp-border); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
+    .toggle:has(input:checked) { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; accent-color: var(--cp-accent); flex-shrink: 0; }
+    .focus-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .focus-chip { min-width: 48px; min-height: 48px; border: 1px solid var(--cp-border-strong); border-radius: 10px; color: var(--cp-text); background: var(--cp-surface); font-weight: 650; }
+    .focus-chip[aria-pressed="true"] { background: var(--cp-accent); color: var(--cp-accent-fg); border-color: var(--cp-accent); }
+    select { min-height: 48px; border: 1px solid var(--cp-border-strong); border-radius: 10px; color: var(--cp-text); background: var(--cp-surface); padding: 8px 12px; width: 100%; }
+    .settings-error { color: var(--cp-danger) !important; font-weight: 650; }
+    .storage-notice { text-align: center; color: var(--cp-text-muted); font-size: 13px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @keyframes swim-in { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes bob { 0%, 100% { transform: translateY(3px) rotate(-6deg); } 50% { transform: translateY(-6px) rotate(-3deg); } }
+    @keyframes rise { 0%, 100% { transform: translateY(8px); opacity: .5; } 50% { transform: translateY(-12px); opacity: 1; } }
+    @media (max-width: 620px) {
+      .app { padding: 16px; }
+      .brand h1 { font-size: 22px; }
+      .brand p, .toolbar .pill { display: none; }
+      .brand-icon { width: 44px; }
+      .intro { margin: 24px 0 18px; }
+      .ocean { padding: 16px 12px; }
+      .host { min-height: 190px; gap: 0; }
+      .big-whale { width: 130px; height: 125px; }
+      .question { min-width: 0; padding: 18px 14px; }
+      .equation { font-size: 32px; }
+      .answers { gap: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .answer { width: 100%; font-size: 28px; }
+      .answer .answer-label { font-size: 9px; }
+      .lesson { padding: 16px; }
+      .legend { gap: 8px; }
+      .round-meta { font-size: 11px; }
+      .actions .button { flex: 1; padding: 12px; }
+      .step-note { width: 100%; order: 3; text-align: center; }
+      .settings { padding: 20px; }
+    }
+    @media (max-width: 370px) {
+      .answers { grid-template-columns: repeat(2, 84px); }
+      .host { flex-direction: column-reverse; padding: 16px 0; }
+      .big-whale { height: 80px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="humpback" viewBox="0 0 180 110">
+        <path fill="currentColor" d="M40 44C55 14 116 17 143 43c9 8 16 9 23 7-4 29-40 42-75 36C62 83 49 67 40 56 28 61 10 55 7 39c13 4 23 1 26-13 10 2 14 9 7 18Z"/>
+        <path fill="var(--cp-surface)" d="M53 56c22 22 70 24 99 8-17 23-65 29-90 10Z"/>
+        <path fill="currentColor" d="M90 61c-5 9-11 23-28 34 21 8 39-5 42-23Z"/>
+        <path d="M63 66c10 5 17 7 24 7M64 73l12 5M67 78l8 3" stroke="var(--cp-border-strong)" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="138" cy="49" r="4" fill="var(--cp-text)"/>
+        <circle cx="139" cy="48" r="1.3" fill="var(--cp-surface)"/>
+        <path d="M145 58q6 4 11-1" stroke="var(--cp-text)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M118 25q-8-13-1-19M119 20q4-10 12-11M116 16q-7-8-13-7" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="orca" viewBox="0 0 180 110">
+        <path fill="currentColor" d="M40 49c12-17 31-23 48-22l9-22c11 4 16 14 17 27 22 5 38 15 52 22-3 23-28 36-62 33-33-3-50-17-64-28C27 67 12 60 7 43c13 5 23 0 26-12 9 2 13 9 7 18Z"/>
+        <path fill="var(--cp-surface)" d="M53 63c15 7 26 12 39 9 12-4 18-8 27-6 13 3 22 2 33-4-8 17-41 25-65 17Z"/>
+        <ellipse cx="131" cy="46" rx="10" ry="5.5" transform="rotate(-15 131 46)" fill="var(--cp-surface)"/>
+        <circle cx="146" cy="50" r="2.8" fill="var(--cp-surface)"/>
+        <path fill="currentColor" d="M86 67c-3 14-10 23-23 29 20 3 34-7 36-22Z"/>
+      </symbol>
+    </defs>
+  </svg>
+  <div class="app">
+    <header class="masthead">
+      <div class="brand">
+        <svg class="brand-icon" aria-hidden="true"><use href="#humpback"/></svg>
+        <div><h1>Whale Math</h1><p>A little ocean of discovery</p></div>
+      </div>
+      <div class="toolbar">
+        <span class="pill">No rush. Just discovery.</span>
+        <button type="button" class="button" id="settings-open" aria-haspopup="dialog">Practice settings</button>
+      </div>
+    </header>
+    <main>
+      <div class="intro">
+        <div class="eyebrow">Small bubbles. Big discoveries.</div>
+        <h2>Make a splash with numbers.</h2>
+        <p>Help your whale find the answer. Tap a bubble to begin.</p>
+      </div>
+      <section class="ocean" aria-label="Math question">
+        <div class="round-meta"><strong id="practice-summary"></strong><span id="round-label"></span></div>
+        <div class="bubble-decor"></div><div class="bubble-decor two"></div><div class="bubble-decor three"></div>
+        <div class="host enter" id="host">
+          <svg class="big-whale" role="img" aria-label="A friendly humpback whale"><use href="#humpback"/></svg>
+          <div class="question">
+            <div class="hint" id="question-hint">Can you help me?</div>
+            <div class="equation" id="equation" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </div>
+        <div class="answers" id="answers" role="group" aria-label="Choose your answer"></div>
+        <div class="feedback" id="feedback" role="status" aria-live="polite">Which bubble has the answer?</div>
+      </section>
+      <section class="lesson" id="lesson" aria-labelledby="lesson-title" hidden>
+        <div class="lesson-top">
+          <div><div class="eyebrow">See the math</div><h3 id="lesson-title"></h3></div>
+          <div class="legend"><span><svg class="humpback" aria-hidden="true"><use href="#humpback"/></svg>Humpback</span><span><svg class="orca" aria-hidden="true"><use href="#orca"/></svg>Orca</span></div>
+        </div>
+        <p class="stage-description" id="stage-description" aria-live="polite" aria-atomic="true"></p>
+        <div class="pods" id="pods"></div>
+        <div class="actions">
+          <button type="button" class="button" id="replay">Replay whales</button>
+          <span class="step-note" id="step-note">Watch the whales, then keep exploring.</span>
+          <button type="button" class="button primary" id="next">Next problem &rarr;</button>
+        </div>
+      </section>
+      <div class="journey">
+        <p id="journey-label">Every answer is a chance to learn.</p>
+        <div class="pearls" id="pearls" aria-hidden="true"></div>
+      </div>
+      <p id="storage-notice" class="storage-notice" role="status" hidden></p>
+    </main>
+    <footer class="footer">Made for curious minds and little flippers.<br>No timers, no ads, no accounts. <a href="https://github.com/DataZoeMS/whale-math">About this game</a></footer>
+  </div>
+  <dialog class="settings" id="settings" aria-labelledby="settings-title">
+    <form id="settings-form">
+      <div class="settings-head"><h2 id="settings-title">Your ocean, your pace.</h2><button type="button" class="button" id="settings-close" aria-label="Close practice settings">Close</button></div>
+      <p>Pick what to practise. Starting a new practice resets this session's progress.</p>
+      <fieldset>
+        <legend>What shall we explore?</legend>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="checkbox" name="operation" value="add"> + Addition</label>
+          <label class="toggle"><input type="checkbox" name="operation" value="subtract"> &minus; Subtraction</label>
+          <label class="toggle"><input type="checkbox" name="operation" value="multiply"> &times; Multiplication</label>
+          <label class="toggle"><input type="checkbox" name="operation" value="divide"> &divide; Division</label>
+        </div>
+      </fieldset>
+      <label for="limit" class="field-title">Number range / table length</label>
+      <select id="limit" name="limit"><option value="5">Up to 5</option><option value="10">Up to 10</option><option value="12">Up to 12</option><option value="20">Up to 20</option></select>
+      <p>Addition totals and subtraction starting numbers stay within this range. Multiplication factors and division answers go up to this number (so a range of 10 includes 10 &times; 10 = 100 and 100 &divide; 10 = 10).</p>
+      <fieldset>
+        <legend>Focus numbers</legend>
+        <button type="button" class="button" id="all-focus">Use all numbers</button>
+        <div class="focus-grid" id="focus-grid" aria-label="Choose one or more focus numbers"></div>
+        <p id="focus-summary"></p>
+        <p>Focus means the number you <strong>add</strong>, <strong>take away</strong>, <strong>multiply by</strong>, or <strong>divide by</strong>. Select 2 and 4 to practise just those numbers. All numbers also includes zero where it is valid.</p>
+      </fieldset>
+      <fieldset>
+        <legend>Problem order</legend>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="radio" name="order" value="sequential"> Sequential</label>
+          <label class="toggle"><input type="radio" name="order" value="shuffle"> Shuffle</label>
+        </div>
+        <p>Sequential works through each operation, then each focus number, from smallest to largest. Shuffle mixes that same set without repeats until the set is complete.</p>
+      </fieldset>
+      <p id="settings-error" class="settings-error" role="alert" hidden></p>
+      <button type="submit" class="button primary">Start practice</button>
+    </form>
+  </dialog>
+  <noscript>This game needs JavaScript enabled to show questions and move the whales.</noscript>
+  <script id="game-script">
+    "use strict";
+    const OPERATIONS = {
+      add: { symbol: "+", name: "Addition", spoken: "plus" },
+      subtract: { symbol: "\u2212", name: "Subtraction", spoken: "minus" },
+      multiply: { symbol: "\u00d7", name: "Multiplication", spoken: "times" },
+      divide: { symbol: "\u00f7", name: "Division", spoken: "divided by" }
+    };
+    const LIMITS = [5, 10, 12, 20];
+    const DEFAULTS = { operations: ["add", "subtract"], limit: 10, focus: [], order: "shuffle" };
+
+    function validateSettings(settings) {
+      if (!settings || !LIMITS.includes(settings.limit)) throw new Error("Choose a supported number range.");
+      if (!Array.isArray(settings.operations) || !settings.operations.length ||
+          settings.operations.some(op => !Object.hasOwn(OPERATIONS, op)) ||
+          new Set(settings.operations).size !== settings.operations.length) throw new Error("Choose at least one valid operation.");
+      if (!Array.isArray(settings.focus) ||
+          settings.focus.some(n => !Number.isInteger(n) || n < 1 || n > settings.limit) ||
+          new Set(settings.focus).size !== settings.focus.length) throw new Error("Choose focus numbers within your range.");
+      if (!["sequential", "shuffle"].includes(settings.order)) throw new Error("Choose Sequential or Shuffle.");
+      return settings;
+    }
+
+    function shuffle(items, random = Math.random) {
+      const result = [...items];
+      for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+      }
+      return result;
+    }
+
+    function makeFacts(settings) {
+      validateSettings(settings);
+      const facts = [];
+      const focus = settings.focus.length ? [...settings.focus].sort((a, b) => a - b)
+        : Array.from({ length: settings.limit + 1 }, (_, i) => i);
+      for (const op of Object.keys(OPERATIONS).filter(op => settings.operations.includes(op))) {
+        for (const n of focus) {
+          for (let k = 0; k <= settings.limit; k++) {
+            let a, b, answer;
+            if (op === "add") { a = k; b = n; answer = k + n; if (answer > settings.limit) continue; }
+            if (op === "subtract") { a = k + n; b = n; answer = k; if (a > settings.limit) continue; }
+            if (op === "multiply") { a = k; b = n; answer = k * n; }
+            if (op === "divide") { if (n === 0) continue; a = k * n; b = n; answer = k; }
+            facts.push({ op, a, b, answer, key: `${op}:${a}:${b}` });
+          }
+        }
+      }
+      return facts;
+    }
+
+    function makeChoices(fact, random = Math.random) {
+      const values = new Set([fact.answer]);
+      const nearby = shuffle(Array.from({ length: 9 }, (_, i) => fact.answer + i - 4)
+        .filter(n => n >= 0 && n !== fact.answer), random);
+      for (const n of nearby) {
+        if (values.size === 4) break;
+        values.add(n);
+      }
+      return shuffle([...values], random);
+    }
+
+    function makeWhales(count, species, start = 0) {
+      return Array.from({ length: count }, (_, i) => ({ id: start + i, species }));
+    }
+
+    function explanation(fact) {
+      const { op, a, b, answer } = fact;
+      let whales, before, after, start, finish;
+      if (op === "add") {
+        const left = makeWhales(a, "humpback");
+        const right = makeWhales(b, "orca", a);
+        whales = [...left, ...right];
+        before = [{ label: `${a} humpbacks`, whales: left }, { label: `${b} orcas`, whales: right }];
+        after = [{ label: `${answer} whales altogether`, whales }];
+        start = `Start with ${a} humpbacks and ${b} orcas in two separate groups.`;
+        finish = `The groups swim together. ${a} plus ${b} is ${answer}. Count all ${answer} whales!`;
+      } else if (op === "subtract") {
+        const stay = makeWhales(answer, "humpback");
+        const leave = makeWhales(b, "orca", answer);
+        whales = [...stay, ...leave];
+        before = [{ label: `${a} whales together`, whales }];
+        after = [{ label: `${answer} whales remaining`, whales: stay },
+          { label: `${b} orcas swim away`, whales: leave, removed: true }];
+        start = `Start with ${a} whales together. The ${b} orcas are going to swim away.`;
+        finish = `${b} orcas leave the group. ${a} minus ${b} is ${answer}. There are ${answer} humpbacks left.`;
+      } else if (op === "multiply") {
+        whales = [];
+        before = Array.from({ length: a }, (_, i) => {
+          const group = makeWhales(b, i % 2 ? "orca" : "humpback", i * b);
+          whales.push(...group);
+          return { label: `Group ${i + 1}: ${b} whales`, whales: group };
+        });
+        if (a === 0) before.push({ label: "0 groups", whales: [] });
+        after = [{ label: `${answer} whales altogether`, whales }];
+        start = `${a} equal groups with ${b} whales in each group.`;
+        finish = `${a} groups of ${b} make ${answer} whales altogether. ${a} times ${b} is ${answer}.`;
+      } else {
+        whales = Array.from({ length: b }, (_, i) => makeWhales(answer, i % 2 ? "orca" : "humpback", i * answer)).flat();
+        before = [{ label: `${a} whales to share`, whales }];
+        after = Array.from({ length: b }, (_, i) => ({
+          label: `Group ${i + 1}: ${answer} whales`, whales: whales.slice(i * answer, (i + 1) * answer)
+        }));
+        start = `Start with ${a} whales. Share them equally into ${b} groups.`;
+        finish = `Each of the ${b} equal groups has ${answer} whales. ${a} divided by ${b} is ${answer}.`;
+      }
+      return { before, after, start, finish, total: whales.length };
+    }
+
+    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS });
+
+    if (typeof document !== "undefined") {
+      const $ = id => document.getElementById(id);
+      let settings = { ...DEFAULTS, operations: [...DEFAULTS.operations], focus: [] };
+      let deck = [], index = 0, completed = 0, correct = 0, cycle = 1;
+      let current, answered = false, lessonTimer, lessonToken = 0, draftFocus = [];
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const storageKey = "whale-math-settings-v1";
+
+      function notice(message) {
+        $("storage-notice").textContent = message;
+        $("storage-notice").hidden = false;
+      }
+
+      try {
+        const saved = localStorage.getItem(storageKey);
+        if (saved) settings = validateSettings(JSON.parse(saved));
+      } catch (error) {
+        console.warn("Could not restore Whale Math settings:", error);
+        notice("Saved settings could not be loaded. Default practice is ready; you can change it in settings.");
+      }
+
+      function cancelLesson() {
+        clearTimeout(lessonTimer);
+        lessonToken++;
+        $("pods").getAnimations({ subtree: true }).forEach(animation => animation.cancel());
+      }
+
+      function startPractice() {
+        cancelLesson();
+        const facts = makeFacts(settings);
+        deck = settings.order === "shuffle" ? shuffle(facts) : facts;
+        index = 0; completed = 0; correct = 0; cycle = 1;
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        cancelLesson();
+        current = deck[index];
+        answered = false;
+        $("lesson").hidden = true;
+        $("feedback").className = "feedback";
+        $("feedback").textContent = "Which bubble has the answer?";
+        $("question-hint").textContent = "Can you help me?";
+        $("equation").innerHTML = `${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = <span class="question-mark">?</span>`;
+        $("equation").setAttribute("aria-label", `${current.a} ${OPERATIONS[current.op].spoken} ${current.b} equals what?`);
+        $("practice-summary").textContent = `${OPERATIONS[current.op].name} \u00b7 ${settings.order === "shuffle" ? "Shuffle" : "Sequential"} \u00b7 Range ${settings.limit}`;
+        $("round-label").textContent = `Fact ${index + 1} of ${deck.length} \u00b7 Round ${cycle}`;
+        $("answers").replaceChildren();
+        for (const value of makeChoices(current)) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.dataset.value = value;
+          button.setAttribute("aria-label", `Answer ${value}`);
+          button.textContent = value;
+          button.addEventListener("click", () => answer(value));
+          $("answers").append(button);
+        }
+        $("host").classList.remove("enter");
+        void $("host").offsetWidth;
+        $("host").classList.add("enter");
+        renderJourney();
+      }
+
+      function renderJourney() {
+        $("journey-label").textContent = completed
+          ? `${completed} ${completed === 1 ? "problem" : "problems"} explored \u00b7 ${correct} correct \u00b7 Keep making discoveries!`
+          : "Every answer is a chance to learn.";
+        $("pearls").replaceChildren();
+        for (let i = 0; i < 10; i++) {
+          const pearl = document.createElement("span");
+          pearl.className = `pearl${i < (completed % 10 || (completed ? 10 : 0)) ? " filled" : ""}`;
+          $("pearls").append(pearl);
+        }
+      }
+
+      function answer(value) {
+        if (answered) return;
+        answered = true;
+        completed++;
+        const isCorrect = value === current.answer;
+        if (isCorrect) correct++;
+        for (const button of $("answers").children) {
+          const n = Number(button.dataset.value);
+          button.disabled = true;
+          if (n === current.answer || n === value) {
+            const label = document.createElement("span");
+            label.className = "answer-label";
+            label.textContent = n === current.answer ? "\u2713 Correct" : "Your pick";
+            button.append(label);
+            button.classList.add(n === current.answer ? "correct" : "incorrect");
+          }
+        }
+        $("feedback").className = `feedback ${isCorrect ? "good" : "try"}`;
+        $("feedback").textContent = isCorrect
+          ? `You found it! ${current.answer} is right. Let's see why.`
+          : `Good exploring! You chose ${value}. The answer is ${current.answer}. Let's count together.`;
+        $("question-hint").textContent = isCorrect ? "A whale of a discovery!" : "Let's learn together!";
+        $("equation").textContent = `${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = ${current.answer}`;
+        $("equation").setAttribute("aria-label", `${current.a} ${OPERATIONS[current.op].spoken} ${current.b} equals ${current.answer}`);
+        $("lesson-title").textContent = $("equation").textContent;
+        $("lesson").hidden = false;
+        renderJourney();
+        playLesson();
+        $("replay").focus({ preventScroll: true });
+        $("lesson").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "nearest" });
+      }
+
+      function renderPods(groups, total) {
+        const container = $("pods");
+        container.classList.toggle("compact", total > 40);
+        container.replaceChildren();
+        for (const group of groups) {
+          const pod = document.createElement("div");
+          pod.className = `pod${group.removed ? " removed" : ""}`;
+          const heading = document.createElement("h4");
+          heading.textContent = group.label;
+          const whales = document.createElement("div");
+          whales.className = "whales";
+          whales.setAttribute("aria-label", group.label);
+          if (!group.whales.length) {
+            const empty = document.createElement("span");
+            empty.className = "empty";
+            empty.textContent = "No whales here (0)";
+            whales.append(empty);
+          }
+          for (const whale of group.whales) {
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("class", `mini-whale ${whale.species}`);
+            svg.setAttribute("aria-hidden", "true");
+            svg.dataset.whaleId = whale.id;
+            const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+            use.setAttribute("href", `#${whale.species}`);
+            svg.append(use);
+            whales.append(svg);
+          }
+          pod.append(heading, whales);
+          container.append(pod);
+        }
+      }
+
+      function playLesson() {
+        cancelLesson();
+        const token = lessonToken;
+        const model = explanation(current);
+        renderPods(model.before, model.total);
+        $("stage-description").textContent = model.start;
+        $("step-note").textContent = "First, count the starting groups.";
+        $("replay").textContent = "Show the result";
+        $("replay").dataset.stage = "before";
+        const finish = () => {
+          if (token !== lessonToken) return;
+          const positions = new Map([...$("pods").querySelectorAll("[data-whale-id]")].map(el => [el.dataset.whaleId, el.getBoundingClientRect()]));
+          renderPods(model.after, model.total);
+          if (!reducedMotion.matches) {
+            for (const whale of $("pods").querySelectorAll("[data-whale-id]")) {
+              const from = positions.get(whale.dataset.whaleId);
+              const to = whale.getBoundingClientRect();
+              whale.animate([
+                { transform: `translate(${from.left - to.left}px, ${from.top - to.top}px)` },
+                { transform: "translate(0, 0)" }
+              ], { duration: 1200, easing: "cubic-bezier(.2,.7,.2,1)" });
+            }
+          }
+          $("stage-description").textContent = model.finish;
+          $("step-note").textContent = "Count the whales. Replay any time.";
+          $("replay").textContent = "Replay whales";
+          $("replay").dataset.stage = "after";
+        };
+        $("replay").onclick = () => {
+          if ($("replay").dataset.stage === "before") { clearTimeout(lessonTimer); finish(); }
+          else playLesson();
+        };
+        if (reducedMotion.matches) {
+          $("step-note").textContent = "Tap Show the result when you're ready.";
+        } else {
+          lessonTimer = setTimeout(finish, 2400);
+        }
+      }
+
+      $("next").addEventListener("click", () => {
+        if (!answered) return;
+        index++;
+        if (index === deck.length) {
+          index = 0;
+          cycle++;
+          if (settings.order === "shuffle") {
+            deck = shuffle(deck);
+            if (deck.length > 1 && deck[0].key === current.key) [deck[0], deck[1]] = [deck[1], deck[0]];
+          }
+        }
+        renderQuestion();
+        $("answers").firstElementChild.focus({ preventScroll: true });
+        $("host").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "nearest" });
+      });
+
+      function renderFocus() {
+        const limit = Number($("limit").value);
+        draftFocus = draftFocus.filter(n => n <= limit);
+        $("focus-grid").replaceChildren();
+        for (let n = 1; n <= limit; n++) {
+          const chip = document.createElement("button");
+          chip.type = "button";
+          chip.className = "focus-chip";
+          chip.textContent = n;
+          chip.setAttribute("aria-label", `Focus on ${n}`);
+          chip.setAttribute("aria-pressed", String(draftFocus.includes(n)));
+          chip.addEventListener("click", () => {
+            draftFocus = draftFocus.includes(n) ? draftFocus.filter(value => value !== n) : [...draftFocus, n].sort((a, b) => a - b);
+            chip.setAttribute("aria-pressed", String(draftFocus.includes(n)));
+            updateFocusSummary();
+          });
+          $("focus-grid").append(chip);
+        }
+        updateFocusSummary();
+      }
+
+      function updateFocusSummary() {
+        $("focus-summary").textContent = draftFocus.length ? `Focusing on: ${draftFocus.join(", ")}.` : "All numbers selected.";
+      }
+
+      $("settings-open").addEventListener("click", () => {
+        for (const checkbox of document.querySelectorAll('[name="operation"]')) checkbox.checked = settings.operations.includes(checkbox.value);
+        $("limit").value = settings.limit;
+        for (const radio of document.querySelectorAll('[name="order"]')) radio.checked = radio.value === settings.order;
+        draftFocus = [...settings.focus];
+        renderFocus();
+        $("settings-error").hidden = true;
+        $("settings").showModal();
+      });
+      $("settings-close").addEventListener("click", () => $("settings").close());
+      $("limit").addEventListener("change", renderFocus);
+      $("all-focus").addEventListener("click", () => { draftFocus = []; renderFocus(); });
+      $("settings-form").addEventListener("submit", event => {
+        event.preventDefault();
+        const candidate = {
+          operations: [...document.querySelectorAll('[name="operation"]:checked')].map(el => el.value),
+          limit: Number($("limit").value),
+          focus: [...draftFocus],
+          order: document.querySelector('[name="order"]:checked').value
+        };
+        try { validateSettings(candidate); }
+        catch (error) {
+          $("settings-error").textContent = error.message;
+          $("settings-error").hidden = false;
+          return;
+        }
+        settings = candidate;
+        try { localStorage.setItem(storageKey, JSON.stringify(settings)); }
+        catch (error) {
+          console.warn("Could not save Whale Math settings:", error);
+          notice("Your browser couldn't save settings. This practice still works, but settings will reset when you leave.");
+        }
+        $("settings").close();
+        startPractice();
+        $("answers").firstElementChild.focus({ preventScroll: true });
+        $("host").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "nearest" });
+      });
+      startPractice();
+    }
+  </script>
+</body>
+</html>
