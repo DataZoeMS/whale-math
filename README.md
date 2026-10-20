@@ -37,6 +37,9 @@ your score:
   addition, subtraction, multiplication, or division problem. Find the first
   number down the side and the second across the top to look up the answer.
   Headers stay visible as you scroll, and selected focus numbers are highlighted.
+  Tap a number down the left side to highlight its entire row. Tap another to
+  move the highlight, or the same number again to clear it. Row headers also
+  support keyboard activation. The selection clears when a new problem starts.
   Division includes the larger starting numbers needed for your selected facts;
   dashes mark non-whole-number division or subtraction below zero. The current
   problem is repeated above the table.
@@ -50,6 +53,8 @@ Both tools can stay open between problems. Scratch work survives closing the
 pad, changing questions, and resizing the browser, but is not saved after a
 reload or sent anywhere. For keyboard stamping, choose a whale, focus the pad,
 use arrow keys to position the stamp, and press Enter or Space.
+Touch gestures that start inside the pad are reserved for drawing and stamping,
+including on iPad Safari. Scrolling and zooming outside the pad remain available.
 
 The optional **practice timer** counts up only when you press **Start**.
 **Stop** pauses it; Start resumes from the paused time. **Reset** stops the timer

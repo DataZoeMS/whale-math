@@ -257,15 +257,20 @@
     .times-table th, .times-table td { min-width: 40px; height: 38px; padding: 8px; border-right: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
     .times-table th { position: sticky; background: var(--cp-bg-elevated); color: var(--cp-text); }
     .times-table thead th { top: 0; z-index: 2; }
-    .times-table tbody th { left: 0; z-index: 1; }
+    .times-table tbody th { left: 0; z-index: 1; padding: 0; }
     .times-table thead th:first-child { left: 0; z-index: 3; }
     .times-table th.focus-number { background: var(--cp-accent); color: var(--cp-accent-fg); }
     .times-table td.unavailable { color: var(--cp-text-soft); }
+    .table-row-toggle { display: block; width: 100%; min-width: 44px; min-height: 44px; padding: 8px; border: 0; background: inherit; color: inherit; font-weight: 750; }
+    .table-row-toggle:focus-visible { outline: 3px solid currentColor; outline-offset: -3px; }
+    .times-table .selected-row > td { background: var(--cp-highlight); box-shadow: inset 0 2px var(--cp-accent), inset 0 -2px var(--cp-accent); }
+    .times-table .selected-row > th { background: var(--cp-accent); color: var(--cp-accent-fg); }
     .scratch-toolbar { align-items: center; margin-bottom: 12px; }
     .scratch-toolbar .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; }
     .scratch-toolbar .button:disabled { opacity: .5; }
     .scratch-toolbar svg { width: 36px; height: 26px; pointer-events: none; }
-    .scratch-board { display: block; width: 100%; height: 320px; border: 2px solid var(--cp-border-strong); border-radius: 10px; background: var(--cp-bg-elevated); touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
+    .scratch-surface { border: 2px solid var(--cp-border-strong); border-radius: 10px; overflow: hidden; background: var(--cp-bg-elevated); touch-action: none; overscroll-behavior: contain; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: crosshair; }
+    .scratch-board { display: block; width: 100%; height: 320px; pointer-events: none; }
     .scratch-board [data-drawing], .scratch-board [data-cursor] { pointer-events: none; }
     .scratch-stroke { fill: none; stroke: var(--cp-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
     .scratch-cursor { fill: none; stroke: var(--cp-accent); stroke-width: 2; stroke-dasharray: 4 4; }
@@ -466,10 +471,12 @@
           <button type="button" class="button" id="scratch-undo" disabled>Undo</button>
           <button type="button" class="button" id="scratch-clear" disabled>Clear pad</button>
         </div>
-        <svg class="scratch-board" id="scratch-board" role="img" aria-label="Drawing and whale stamping area" aria-describedby="scratch-instructions scratch-keyboard" tabindex="0">
-          <g data-drawing="" aria-hidden="true"></g>
-          <g data-cursor="" aria-hidden="true"></g>
-        </svg>
+        <div class="scratch-surface" id="scratch-surface" role="img" aria-label="Drawing and whale stamping area" aria-describedby="scratch-instructions scratch-keyboard" tabindex="0">
+          <svg class="scratch-board" id="scratch-board" aria-hidden="true">
+            <g data-drawing=""></g>
+            <g data-cursor=""></g>
+          </svg>
+        </div>
         <p class="scratch-summary" id="scratch-summary" role="status">Your scratch pad is empty.</p>
         <p id="scratch-keyboard">Keyboard stamping: select a whale, focus the pad, move with arrow keys, and press Enter or Space to stamp.</p>
       </section>
@@ -723,8 +730,16 @@
         renderQuestion(focusQuestion);
       }
 
+      function clearHelperRow() {
+        for (const row of $("times-table").querySelectorAll(".selected-row")) {
+          row.classList.remove("selected-row");
+          row.querySelector(".table-row-toggle").setAttribute("aria-pressed", "false");
+        }
+      }
+
       function renderHelperTable() {
         const table = $("times-table");
+        clearHelperRow();
         const key = `${current.op}:${settings.limit}:${settings.focus.join(",")}`;
         if (table.dataset.key === key) return;
         const model = makeHelperTable(current.op, settings.limit, settings.focus);
@@ -755,7 +770,21 @@
           const tr = document.createElement("tr");
           const label = document.createElement("th");
           label.scope = "row";
-          label.textContent = row;
+          const toggle = document.createElement("button");
+          toggle.type = "button";
+          toggle.className = "table-row-toggle";
+          toggle.textContent = row;
+          toggle.setAttribute("aria-label", `Highlight row ${row}`);
+          toggle.setAttribute("aria-pressed", "false");
+          toggle.addEventListener("click", () => {
+            const wasSelected = tr.classList.contains("selected-row");
+            clearHelperRow();
+            if (!wasSelected) {
+              tr.classList.add("selected-row");
+              toggle.setAttribute("aria-pressed", "true");
+            }
+          });
+          label.append(toggle);
           if (settings.focus.includes(row)) label.className = "focus-number";
           tr.append(label);
           for (const result of model.values[rowIndex]) {
@@ -784,7 +813,7 @@
           : current.op === "divide"
             ? " Rows include the starting numbers in your selected division facts. A dash means the answer is not a whole number."
             : "";
-        $("table-instructions").textContent = `Find ${current.a} down the left side and ${current.b} across the top. Where they meet is the answer.${extra} Scroll to see more numbers.`;
+        $("table-instructions").textContent = `Find ${current.a} down the left side and ${current.b} across the top. Where they meet is the answer.${extra} Tap a number on the left to highlight its row; tap it again to clear. Scroll to see more numbers.`;
       }
 
       let timerElapsed = 0, timerStartedAt = null, timerInterval = null;
@@ -833,6 +862,7 @@
 
       const scratchItems = [];
       const board = $("scratch-board");
+      const scratchSurface = $("scratch-surface");
       const drawing = board.querySelector("[data-drawing]");
       const cursorLayer = board.querySelector("[data-cursor]");
       let scratchTool = "draw", activePointer = null, activeStroke = null, activePath = null;
@@ -905,7 +935,7 @@
         activePointer = null;
         activeStroke = null;
         activePath = null;
-        if (board.hasPointerCapture(pointer)) board.releasePointerCapture(pointer);
+        if (scratchSurface.hasPointerCapture(pointer)) scratchSurface.releasePointerCapture(pointer);
         updateScratchSummary();
       }
 
@@ -925,7 +955,14 @@
         return { x: Math.max(0, Math.min(1, point.x / size.width)), y: Math.max(0, Math.min(1, point.y / size.height)) };
       }
 
-      board.addEventListener("pointerdown", event => {
+      // Safari must reject native panning before it can cancel the drawing pointer.
+      for (const type of ["touchstart", "touchmove"]) {
+        scratchSurface.addEventListener(type, event => {
+          if (event.cancelable) event.preventDefault();
+        }, { passive: false });
+      }
+
+      scratchSurface.addEventListener("pointerdown", event => {
         if (!event.isPrimary || event.button !== 0 || activePointer !== null) return;
         event.preventDefault();
         showScratchCursor = false;
@@ -934,24 +971,24 @@
         activePointer = event.pointerId;
         activeStroke = { type: "stroke", points: [point] };
         scratchItems.push(activeStroke);
-        board.setPointerCapture(event.pointerId);
+        scratchSurface.setPointerCapture(event.pointerId);
         renderScratch();
         updateScratchSummary();
       });
-      board.addEventListener("pointermove", event => {
+      scratchSurface.addEventListener("pointermove", event => {
         if (event.pointerId !== activePointer) return;
         event.preventDefault();
         activeStroke.points.push(scratchPoint(event));
         activePath.setAttribute("d", strokePath(activeStroke.points, scratchSize()));
       });
-      board.addEventListener("pointerup", event => {
+      scratchSurface.addEventListener("pointerup", event => {
         if (event.pointerId === activePointer) finishScratchStroke();
       });
-      board.addEventListener("pointercancel", event => {
+      scratchSurface.addEventListener("pointercancel", event => {
         if (event.pointerId === activePointer) finishScratchStroke();
       });
-      board.addEventListener("lostpointercapture", finishScratchStroke);
-      board.addEventListener("keydown", event => {
+      scratchSurface.addEventListener("lostpointercapture", finishScratchStroke);
+      scratchSurface.addEventListener("keydown", event => {
         if (scratchTool === "draw") return;
         const deltas = { ArrowLeft: [-.05, 0], ArrowRight: [.05, 0], ArrowUp: [0, -.05], ArrowDown: [0, .05] };
         if (Object.hasOwn(deltas, event.key)) {
