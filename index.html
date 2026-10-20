@@ -66,6 +66,117 @@
       --cp-sheen: rgba(255, 255, 255, 0.04);
       --cp-highlight: rgba(253, 142, 161, 0.12);
     }
+    :root {
+      --cp-whale-skin: #4b87aa;
+      --cp-whale-belly: #ecf7fa;
+      --cp-whale-eye: #153244;
+      --cp-whale-detail: #537f98;
+      --cp-orca-skin: #193544;
+      --cp-ocean-swatch: #146c94;
+      --cp-seaglass-swatch: #16786d;
+      --cp-coral-swatch: #b64d42;
+      --cp-rose-swatch: #b11f4b;
+    }
+    :root:not([data-palette]), :root[data-palette="ocean"] {
+      --cp-bg: #edf6fb;
+      --cp-bg-elevated: #dfeff7;
+      --cp-surface-soft: #e8f3f8;
+      --cp-border: #b8d6e5;
+      --cp-border-strong: #6895aa;
+      --cp-text: #14374a;
+      --cp-text-muted: #446678;
+      --cp-text-soft: #53788b;
+      --cp-accent: #146c94;
+      --cp-accent-hover: #0f5579;
+      --cp-accent-soft: rgba(20, 108, 148, 0.08);
+      --cp-highlight: rgba(20, 108, 148, 0.12);
+    }
+    html[data-theme="dark"]:not([data-palette]), html[data-theme="dark"][data-palette="ocean"] {
+      --cp-bg: #0c2435;
+      --cp-bg-elevated: #102e42;
+      --cp-surface: #153c50;
+      --cp-surface-soft: #1b4358;
+      --cp-border: #315c72;
+      --cp-border-strong: #58849a;
+      --cp-text: #e4f5fb;
+      --cp-text-muted: #a0c7d8;
+      --cp-text-soft: #91bccc;
+      --cp-accent: #7cd4f1;
+      --cp-accent-hover: #aaecff;
+      --cp-accent-fg: #082737;
+      --cp-accent-soft: rgba(124, 212, 241, 0.12);
+      --cp-highlight: rgba(124, 212, 241, 0.18);
+      --cp-overlay: rgba(12, 36, 53, 0.88);
+      --cp-whale-skin: #6ba7ca;
+      --cp-orca-skin: #315c72;
+    }
+    :root[data-palette="seaglass"] {
+      --cp-bg: #eef8f3;
+      --cp-bg-elevated: #e0f1e9;
+      --cp-surface-soft: #e8f4ed;
+      --cp-border: #b6d7ca;
+      --cp-border-strong: #6a9987;
+      --cp-text: #183f38;
+      --cp-text-muted: #446b5e;
+      --cp-text-soft: #557a6d;
+      --cp-accent: #16786d;
+      --cp-accent-hover: #105e55;
+      --cp-accent-soft: rgba(22, 120, 109, 0.08);
+      --cp-highlight: rgba(22, 120, 109, 0.12);
+      --cp-whale-skin: #4a8d88;
+    }
+    html[data-theme="dark"][data-palette="seaglass"] {
+      --cp-bg: #102e29;
+      --cp-bg-elevated: #153b34;
+      --cp-surface: #1b473f;
+      --cp-surface-soft: #234e44;
+      --cp-border: #3d6a5e;
+      --cp-border-strong: #689888;
+      --cp-text: #e5f7ee;
+      --cp-text-muted: #a6cdbd;
+      --cp-text-soft: #96baac;
+      --cp-accent: #8ddccc;
+      --cp-accent-hover: #b1f0e3;
+      --cp-accent-fg: #103b32;
+      --cp-accent-soft: rgba(141, 220, 204, 0.12);
+      --cp-highlight: rgba(141, 220, 204, 0.18);
+      --cp-overlay: rgba(16, 46, 41, 0.88);
+      --cp-whale-skin: #70b7ad;
+      --cp-orca-skin: #42695f;
+    }
+    :root[data-palette="coral"] {
+      --cp-bg: #fff4ee;
+      --cp-bg-elevated: #fbe7db;
+      --cp-surface-soft: #fff0e8;
+      --cp-border: #e6c7b7;
+      --cp-border-strong: #b58e7e;
+      --cp-text: #513831;
+      --cp-text-muted: #78564c;
+      --cp-text-soft: #89675b;
+      --cp-accent: #b64d42;
+      --cp-accent-hover: #943b32;
+      --cp-accent-soft: rgba(182, 77, 66, 0.08);
+      --cp-highlight: rgba(182, 77, 66, 0.12);
+    }
+    html[data-theme="dark"][data-palette="coral"] {
+      --cp-bg: #342723;
+      --cp-bg-elevated: #443029;
+      --cp-surface: #513a32;
+      --cp-surface-soft: #594238;
+      --cp-border: #795747;
+      --cp-border-strong: #a87d68;
+      --cp-text: #fff0e4;
+      --cp-text-muted: #dfbca7;
+      --cp-text-soft: #c8a692;
+      --cp-accent: #ffac95;
+      --cp-accent-hover: #ffcbb6;
+      --cp-accent-fg: #46291f;
+      --cp-accent-soft: rgba(255, 172, 149, 0.12);
+      --cp-highlight: rgba(255, 172, 149, 0.18);
+      --cp-overlay: rgba(52, 39, 35, 0.88);
+      --cp-whale-skin: #78a7c2;
+      --cp-orca-skin: #456071;
+    }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
     body { margin: 0; background: var(--cp-bg); color: var(--cp-text); font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif; }
@@ -80,7 +191,7 @@
     .app { max-width: 1080px; margin: auto; padding: 24px max(24px, env(safe-area-inset-right)) 32px max(24px, env(safe-area-inset-left)); }
     .masthead, .brand, .toolbar, .legend, .actions, .settings-head { display: flex; align-items: center; gap: 12px; }
     .masthead { justify-content: space-between; gap: 20px; }
-    .brand-icon { width: 56px; height: 48px; color: var(--cp-accent); }
+    .brand-icon { width: 56px; height: 48px; color: var(--cp-whale-skin); }
     .brand h1 { margin: 0; font-size: 25px; letter-spacing: -1px; }
     .brand p { margin: 2px 0 0; font-size: 13px; color: var(--cp-text-muted); }
     .pill { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 14px; border-radius: 24px; background: var(--cp-surface); border: 1px solid var(--cp-border); font-size: 14px; font-weight: 600; }
@@ -96,20 +207,31 @@
     .ocean::before { content: ""; position: absolute; height: 180px; width: 100%; left: 0; bottom: -110px; border-radius: 50%; background: var(--cp-accent-soft); pointer-events: none; }
     .round-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--cp-text-muted); font-size: 13px; position: relative; z-index: 1; }
     .round-meta strong { color: var(--cp-accent); font-weight: 650; }
-    .host { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 228px; }
-    .host.enter { animation: swim-in .85s cubic-bezier(.16, 1, .3, 1) both; }
-    .big-whale { width: clamp(160px, 30vw, 280px); height: 170px; color: var(--cp-accent); transform: rotate(-6deg); animation: bob 5s ease-in-out infinite; }
-    .question { position: relative; min-width: 255px; text-align: center; padding: 24px 28px; background: var(--cp-surface); border: 2px solid var(--cp-border); border-radius: 24px 24px 24px 4px; }
+    .host { position: relative; width: min(100%, 640px); margin: 0 auto; }
+    .host.enter { animation: swim-in 1.6s cubic-bezier(.2, .65, .25, 1) both; }
+    .whale-carrier { position: relative; animation: cruise 6s ease-in-out infinite; }
+    .big-whale { display: block; width: 100%; height: auto; aspect-ratio: 360 / 210; color: var(--cp-whale-skin); --tail-motion: tail-sweep 2.2s ease-in-out infinite; --flipper-motion: flipper-stroke 3s ease-in-out infinite; }
+    .tail-flukes { transform-origin: 24% 54%; animation: var(--tail-motion, none); }
+    .pectoral-flipper { transform-origin: 62% 65%; animation: var(--flipper-motion, none); }
+    .question { position: absolute; z-index: 1; top: 0; left: 30%; width: 58%; text-align: center; padding: 14px 18px; background: var(--cp-surface); border: 2px solid var(--cp-border); border-radius: 20px; }
+    .question::after { content: ""; position: absolute; left: 32%; bottom: -11px; width: 18px; height: 18px; transform: rotate(45deg); background: var(--cp-surface); border-right: 2px solid var(--cp-border); border-bottom: 2px solid var(--cp-border); }
     .question .hint { font-size: 13px; font-weight: 650; color: var(--cp-text-muted); margin-bottom: 4px; }
-    .equation { font-size: clamp(32px, 5vw, 48px); font-weight: 750; white-space: nowrap; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+    .equation { position: relative; z-index: 1; font-size: clamp(32px, 4.5vw, 46px); font-weight: 750; white-space: nowrap; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
     .question-mark { color: var(--cp-accent); }
     .bubble-decor { position: absolute; border: 2px solid var(--cp-border); border-radius: 50%; width: 14px; height: 14px; left: 9%; top: 44%; animation: rise 6s ease-in-out infinite; pointer-events: none; }
     .bubble-decor.two { left: auto; right: 8%; width: 25px; height: 25px; top: 64%; animation-delay: -3s; }
     .bubble-decor.three { left: 18%; width: 9px; height: 9px; top: 14%; animation-delay: -1s; }
-    .answers { display: flex; justify-content: center; gap: clamp(12px, 4vw, 42px); position: relative; padding: 0 0 20px; }
+    .answers { display: flex; justify-content: center; gap: clamp(12px, 4vw, 42px); position: relative; z-index: 2; padding: 36px 8px 32px; }
+    .answers.awaiting { visibility: hidden; pointer-events: none; }
+    .answers.revealed { animation: bubbles-rise .7s ease-out both; }
+    .answer-slot { display: flex; animation: bubble-float 4.8s ease-in-out infinite; }
+    .answer-slot:nth-child(2) { animation-delay: -1.2s; animation-duration: 5.6s; }
+    .answer-slot:nth-child(3) { animation-delay: -2.8s; animation-duration: 5.2s; }
+    .answer-slot:nth-child(4) { animation-delay: -1.8s; animation-duration: 6s; }
+    .answers.answered .answer-slot, .answer-slot:focus-within { animation-play-state: paused; }
     .answer { width: clamp(88px, 14vw, 124px); aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--cp-border-strong); color: var(--cp-text); background: radial-gradient(circle at 28% 24%, var(--cp-surface) 0 8%, var(--cp-bg-elevated) 9% 55%, var(--cp-accent-soft)); position: relative; font-size: 36px; font-weight: 750; transition: transform .15s, border-color .15s; }
     .answer::before { content: ""; position: absolute; left: 20%; top: 14%; width: 22%; height: 10%; border-top: 3px solid var(--cp-border); border-radius: 50%; transform: rotate(-30deg); }
-    .answer:not(:disabled):hover, .answer:not(:disabled):active { transform: scale(1.08); border-color: var(--cp-accent); }
+    .answer:not(:disabled):hover, .answer:not(:disabled):active { transform: scale(1.06); border-color: var(--cp-accent); }
     .answer.correct { border: 4px solid var(--cp-success); background: var(--cp-surface); }
     .answer.incorrect { border: 4px dashed var(--cp-danger); }
     .answer .answer-label { display: block; font-size: 11px; margin-top: 2px; font-weight: 750; }
@@ -123,8 +245,8 @@
     .legend { font-size: 12px; color: var(--cp-text-muted); gap: 14px; }
     .legend span { display: flex; align-items: center; gap: 4px; }
     .legend svg { width: 36px; height: 24px; }
-    .humpback { color: var(--cp-accent); }
-    .orca { color: var(--cp-text); }
+    .humpback { color: var(--cp-whale-skin); }
+    .orca { color: var(--cp-orca-skin); }
     .stage-description { min-height: 48px; margin: 16px 0; color: var(--cp-text-muted); font-size: 16px; line-height: 1.5; }
     .pods { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); gap: 12px; align-items: start; }
     .pod { min-height: 100px; border: 2px solid var(--cp-border); border-radius: 12px; padding: 12px; background: var(--cp-bg-elevated); }
@@ -145,7 +267,9 @@
     .footer a { font-weight: 650; text-decoration: none; }
     .settings { width: min(640px, calc(100% - 24px)); max-height: calc(100dvh - 32px); padding: 24px; border: 1px solid var(--cp-border); border-radius: 16px; color: var(--cp-text); background: var(--cp-surface); overscroll-behavior: contain; }
     .settings::backdrop { background: var(--cp-overlay); }
-    .settings-head { justify-content: space-between; }
+    .settings-head { position: sticky; top: -24px; z-index: 3; flex-direction: column; align-items: stretch; margin: -24px -24px 0; padding: 20px 24px 16px; background: var(--cp-surface); border-bottom: 1px solid var(--cp-border); }
+    .settings-actions { display: flex; gap: 12px; }
+    .settings-actions .primary { flex: 1; }
     .settings h2 { margin: 0; font-size: 26px; }
     .settings fieldset { border: 0; padding: 0; margin: 24px 0; min-width: 0; }
     .settings legend, .field-title { display: block; font-weight: 750; font-size: 15px; margin-bottom: 10px; }
@@ -153,6 +277,11 @@
     .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .toggle { display: flex; gap: 10px; align-items: center; min-height: 52px; border: 1px solid var(--cp-border); border-radius: 10px; padding: 10px 12px; cursor: pointer; }
     .toggle:has(input:checked) { border-color: var(--cp-accent); background: var(--cp-accent-soft); }
+    .palette-swatch { display: inline-block; width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0; }
+    .palette-swatch.swatch-ocean { background: var(--cp-ocean-swatch); }
+    .palette-swatch.swatch-seaglass { background: var(--cp-seaglass-swatch); }
+    .palette-swatch.swatch-coral { background: var(--cp-coral-swatch); }
+    .palette-swatch.swatch-rose { background: var(--cp-rose-swatch); }
     input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; accent-color: var(--cp-accent); flex-shrink: 0; }
     .focus-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
     .focus-chip { min-width: 48px; min-height: 48px; border: 1px solid var(--cp-border-strong); border-radius: 10px; color: var(--cp-text); background: var(--cp-surface); font-weight: 650; }
@@ -161,8 +290,16 @@
     .settings-error { color: var(--cp-danger) !important; font-weight: 650; }
     .storage-notice { text-align: center; color: var(--cp-text-muted); font-size: 13px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
-    @keyframes swim-in { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes bob { 0%, 100% { transform: translateY(3px) rotate(-6deg); } 50% { transform: translateY(-6px) rotate(-3deg); } }
+    @keyframes swim-in {
+      0% { transform: translateX(-110vw) translateY(20px) rotate(-7deg); }
+      65% { transform: translateX(12px) translateY(-6px) rotate(1deg); }
+      100% { transform: translateX(0) translateY(0) rotate(0); }
+    }
+    @keyframes cruise { 0%, 100% { transform: translateY(4px) rotate(-.5deg); } 50% { transform: translateY(-5px) rotate(.5deg); } }
+    @keyframes tail-sweep { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(6deg); } }
+    @keyframes flipper-stroke { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(7deg); } }
+    @keyframes bubbles-rise { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bubble-float { 0%, 100% { transform: translateY(5px); } 50% { transform: translateY(-9px); } }
     @keyframes rise { 0%, 100% { transform: translateY(8px); opacity: .5; } 50% { transform: translateY(-12px); opacity: 1; } }
     @media (max-width: 620px) {
       .app { padding: 16px; }
@@ -171,11 +308,11 @@
       .brand-icon { width: 44px; }
       .intro { margin: 24px 0 18px; }
       .ocean { padding: 16px 12px; }
-      .host { min-height: 190px; gap: 0; }
-      .big-whale { width: 130px; height: 125px; }
-      .question { min-width: 0; padding: 18px 14px; }
-      .equation { font-size: 32px; }
-      .answers { gap: 12px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .whale-carrier { padding-top: 56px; }
+      .question { left: 22%; width: 74%; padding: 12px; }
+      .question .hint { font-size: 12px; }
+      .equation { font-size: clamp(25px, 6vw, 34px); }
+      .answers { gap: 10px; padding: 30px 0 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .answer { width: 100%; font-size: 28px; }
       .answer .answer-label { font-size: 9px; }
       .lesson { padding: 16px; }
@@ -184,11 +321,12 @@
       .actions .button { flex: 1; padding: 12px; }
       .step-note { width: 100%; order: 3; text-align: center; }
       .settings { padding: 20px; }
+      .settings-head { top: -20px; margin: -20px -20px 0; padding: 20px 20px 16px; }
     }
     @media (max-width: 370px) {
-      .answers { grid-template-columns: repeat(2, 84px); }
-      .host { flex-direction: column-reverse; padding: 16px 0; }
-      .big-whale { height: 80px; }
+      .answers { gap: 8px; }
+      .answer { font-size: 25px; }
+      .question { left: 16%; width: 80%; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
@@ -198,21 +336,33 @@
 <body>
   <svg class="sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
-      <symbol id="humpback" viewBox="0 0 180 110">
-        <path fill="currentColor" d="M40 44C55 14 116 17 143 43c9 8 16 9 23 7-4 29-40 42-75 36C62 83 49 67 40 56 28 61 10 55 7 39c13 4 23 1 26-13 10 2 14 9 7 18Z"/>
-        <path fill="var(--cp-surface)" d="M53 56c22 22 70 24 99 8-17 23-65 29-90 10Z"/>
-        <path fill="currentColor" d="M90 61c-5 9-11 23-28 34 21 8 39-5 42-23Z"/>
-        <path d="M63 66c10 5 17 7 24 7M64 73l12 5M67 78l8 3" stroke="var(--cp-border-strong)" fill="none" stroke-width="2" stroke-linecap="round"/>
-        <circle cx="138" cy="49" r="4" fill="var(--cp-text)"/>
-        <circle cx="139" cy="48" r="1.3" fill="var(--cp-surface)"/>
-        <path d="M145 58q6 4 11-1" stroke="var(--cp-text)" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <path d="M118 25q-8-13-1-19M119 20q4-10 12-11M116 16q-7-8-13-7" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <symbol id="humpback" viewBox="0 0 360 210">
+        <g class="tail-flukes">
+          <path fill="currentColor" d="M99 120C77 104 63 88 55 75 34 78 13 63 8 44 29 41 47 49 56 62 56 39 70 23 91 20 95 45 81 68 68 75 77 91 92 101 113 110Z"/>
+          <path d="M57 70C48 63 36 56 24 53M63 66C72 54 80 40 83 30" stroke="var(--cp-whale-detail)" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <path fill="var(--cp-whale-detail)" d="M248 139C260 154 279 167 295 170 287 155 274 141 264 135Z"/>
+        <path fill="currentColor" d="M79 103C102 101 124 90 141 81Q148 65 157 68 163 70 169 73C185 68 204 66 222 68 271 68 317 86 340 104 355 115 352 133 333 145 297 167 240 173 184 151 139 133 109 122 80 115Z"/>
+        <path fill="var(--cp-whale-belly)" d="M133 118C189 146 275 154 340 127 330 150 286 164 242 160 202 157 165 137 133 118Z"/>
+        <path d="M202 141Q261 162 324 137M193 132Q260 157 330 133M222 151Q270 165 314 145" stroke="var(--cp-whale-detail)" fill="none" stroke-width="2" stroke-linecap="round"/>
+        <g class="pectoral-flipper">
+          <path fill="currentColor" d="M226 133C219 154 196 183 164 199 163 187 171 174 178 166 186 151 195 138 208 128Z"/>
+          <path fill="var(--cp-whale-belly)" d="M212 143C201 164 181 187 169 193 175 177 192 155 204 142Z"/>
+        </g>
+        <path d="M339 120Q326 134 300 133" stroke="var(--cp-whale-eye)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="316" cy="108" rx="5.5" ry="6" fill="var(--cp-whale-eye)"/>
+        <circle cx="317.5" cy="106.5" r="1.8" fill="var(--cp-whale-belly)"/>
+        <path d="M306 97Q312 92 319 97" stroke="var(--cp-whale-detail)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <g fill="var(--cp-whale-belly)" opacity=".6">
+          <circle cx="276" cy="84" r="2.5"/><circle cx="287" cy="88" r="2.5"/><circle cx="298" cy="92" r="2"/>
+          <circle cx="339" cy="112" r="2"/><circle cx="332" cy="107" r="2"/>
+        </g>
       </symbol>
       <symbol id="orca" viewBox="0 0 180 110">
         <path fill="currentColor" d="M40 49c12-17 31-23 48-22l9-22c11 4 16 14 17 27 22 5 38 15 52 22-3 23-28 36-62 33-33-3-50-17-64-28C27 67 12 60 7 43c13 5 23 0 26-12 9 2 13 9 7 18Z"/>
-        <path fill="var(--cp-surface)" d="M53 63c15 7 26 12 39 9 12-4 18-8 27-6 13 3 22 2 33-4-8 17-41 25-65 17Z"/>
-        <ellipse cx="131" cy="46" rx="10" ry="5.5" transform="rotate(-15 131 46)" fill="var(--cp-surface)"/>
-        <circle cx="146" cy="50" r="2.8" fill="var(--cp-surface)"/>
+        <path fill="var(--cp-whale-belly)" d="M53 63c15 7 26 12 39 9 12-4 18-8 27-6 13 3 22 2 33-4-8 17-41 25-65 17Z"/>
+        <ellipse cx="131" cy="46" rx="10" ry="5.5" transform="rotate(-15 131 46)" fill="var(--cp-whale-belly)"/>
+        <circle cx="146" cy="50" r="2.8" fill="var(--cp-whale-belly)"/>
         <path fill="currentColor" d="M86 67c-3 14-10 23-23 29 20 3 34-7 36-22Z"/>
       </symbol>
     </defs>
@@ -232,19 +382,21 @@
       <div class="intro">
         <div class="eyebrow">Small bubbles. Big discoveries.</div>
         <h2>Make a splash with numbers.</h2>
-        <p>Help your whale find the answer. Tap a bubble to begin.</p>
+        <p>Your whale brings a problem. Pop an answer bubble above!</p>
       </div>
       <section class="ocean" aria-label="Math question">
         <div class="round-meta"><strong id="practice-summary"></strong><span id="round-label"></span></div>
         <div class="bubble-decor"></div><div class="bubble-decor two"></div><div class="bubble-decor three"></div>
-        <div class="host enter" id="host">
-          <svg class="big-whale" role="img" aria-label="A friendly humpback whale"><use href="#humpback"/></svg>
-          <div class="question">
-            <div class="hint" id="question-hint">Can you help me?</div>
-            <div class="equation" id="equation" aria-live="polite" aria-atomic="true"></div>
+        <div class="answers awaiting" id="answers" role="group" aria-label="Choose an answer bubble above the whale"></div>
+        <div class="host" id="host">
+          <div class="whale-carrier">
+            <svg class="big-whale" viewBox="0 0 360 210" role="img" aria-label="A humpback whale with broad tail flukes, a long flipper, and a pleated belly"><use href="#humpback"/></svg>
+            <div class="question">
+              <div class="hint" id="question-hint">Can you help me?</div>
+              <div class="equation" id="equation" tabindex="-1" aria-live="polite" aria-atomic="true"></div>
+            </div>
           </div>
         </div>
-        <div class="answers" id="answers" role="group" aria-label="Choose your answer"></div>
         <div class="feedback" id="feedback" role="status" aria-live="polite">Which bubble has the answer?</div>
       </section>
       <section class="lesson" id="lesson" aria-labelledby="lesson-title" hidden>
@@ -270,8 +422,23 @@
   </div>
   <dialog class="settings" id="settings" aria-labelledby="settings-title">
     <form id="settings-form">
-      <div class="settings-head"><h2 id="settings-title">Your ocean, your pace.</h2><button type="button" class="button" id="settings-close" aria-label="Close practice settings">Close</button></div>
-      <p>Pick what to practise. Starting a new practice resets this session's progress.</p>
+      <div class="settings-head">
+        <h2 id="settings-title">Your ocean, your pace.</h2>
+        <div class="settings-actions">
+          <button type="submit" class="button primary">Start practice</button>
+          <button type="button" class="button" id="settings-close" aria-label="Close practice settings without applying changes">Close</button>
+        </div>
+      </div>
+      <p><strong>Start practice</strong> applies your changes and resets progress. <strong>Close</strong> keeps your current practice.</p>
+      <fieldset>
+        <legend>Ocean colors</legend>
+        <div class="toggle-grid">
+          <label class="toggle"><input type="radio" name="palette" value="ocean"><span class="palette-swatch swatch-ocean" aria-hidden="true"></span> Ocean blue</label>
+          <label class="toggle"><input type="radio" name="palette" value="seaglass"><span class="palette-swatch swatch-seaglass" aria-hidden="true"></span> Sea glass</label>
+          <label class="toggle"><input type="radio" name="palette" value="coral"><span class="palette-swatch swatch-coral" aria-hidden="true"></span> Coral reef</label>
+          <label class="toggle"><input type="radio" name="palette" value="rose"><span class="palette-swatch swatch-rose" aria-hidden="true"></span> Classic rose</label>
+        </div>
+      </fieldset>
       <fieldset>
         <legend>What shall we explore?</legend>
         <div class="toggle-grid">
@@ -300,7 +467,6 @@
         <p>Sequential works through each operation, then each focus number, from smallest to largest. Shuffle mixes that same set without repeats until the set is complete.</p>
       </fieldset>
       <p id="settings-error" class="settings-error" role="alert" hidden></p>
-      <button type="submit" class="button primary">Start practice</button>
     </form>
   </dialog>
   <noscript>This game needs JavaScript enabled to show questions and move the whales.</noscript>
@@ -313,7 +479,8 @@
       divide: { symbol: "\u00f7", name: "Division", spoken: "divided by" }
     };
     const LIMITS = [5, 10, 12, 20];
-    const DEFAULTS = { operations: ["add", "subtract"], limit: 10, focus: [], order: "shuffle" };
+    const PALETTES = ["ocean", "seaglass", "coral", "rose"];
+    const DEFAULTS = { operations: ["add", "subtract"], limit: 10, focus: [], order: "shuffle", palette: "ocean" };
 
     function validateSettings(settings) {
       if (!settings || !LIMITS.includes(settings.limit)) throw new Error("Choose a supported number range.");
@@ -324,7 +491,9 @@
           settings.focus.some(n => !Number.isInteger(n) || n < 1 || n > settings.limit) ||
           new Set(settings.focus).size !== settings.focus.length) throw new Error("Choose focus numbers within your range.");
       if (!["sequential", "shuffle"].includes(settings.order)) throw new Error("Choose Sequential or Shuffle.");
-      return settings;
+      const palette = settings.palette === undefined ? DEFAULTS.palette : settings.palette;
+      if (!PALETTES.includes(palette)) throw new Error("Choose one of the available ocean colors.");
+      return { ...settings, palette };
     }
 
     function shuffle(items, random = Math.random) {
@@ -364,7 +533,7 @@
         if (values.size === 4) break;
         values.add(n);
       }
-      return shuffle([...values], random);
+      return [...values].sort((a, b) => a - b);
     }
 
     function makeWhales(count, species, start = 0) {
@@ -414,13 +583,14 @@
       return { before, after, start, finish, total: whales.length };
     }
 
-    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS });
+    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES });
 
     if (typeof document !== "undefined") {
       const $ = id => document.getElementById(id);
       let settings = { ...DEFAULTS, operations: [...DEFAULTS.operations], focus: [] };
       let deck = [], index = 0, completed = 0, correct = 0, cycle = 1;
       let current, answered = false, lessonTimer, lessonToken = 0, draftFocus = [];
+      let arriving = false, entranceTimer;
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
       const storageKey = "whale-math-settings-v1";
 
@@ -443,40 +613,71 @@
         $("pods").getAnimations({ subtree: true }).forEach(animation => animation.cancel());
       }
 
-      function startPractice() {
+      function startPractice(focusQuestion = false) {
         cancelLesson();
+        document.documentElement.dataset.palette = settings.palette;
         const facts = makeFacts(settings);
         deck = settings.order === "shuffle" ? shuffle(facts) : facts;
         index = 0; completed = 0; correct = 0; cycle = 1;
-        renderQuestion();
+        renderQuestion(focusQuestion);
       }
 
-      function renderQuestion() {
+      function revealAnswers() {
+        if (!arriving) return;
+        clearTimeout(entranceTimer);
+        arriving = false;
+        $("answers").classList.remove("awaiting");
+        $("answers").classList.add("revealed");
+        for (const button of $("answers").querySelectorAll(".answer")) button.disabled = false;
+        $("feedback").textContent = "Pop the answer bubble above your whale!";
+        if (document.activeElement === $("equation") && !$("settings").open) {
+          $("answers").querySelector(".answer").focus({ preventScroll: true });
+        }
+      }
+
+      $("host").addEventListener("animationend", event => {
+        if (event.target === $("host") && event.animationName === "swim-in") revealAnswers();
+      });
+      reducedMotion.addEventListener("change", event => {
+        if (event.matches) revealAnswers();
+      });
+
+      function renderQuestion(focusQuestion = false) {
         cancelLesson();
+        clearTimeout(entranceTimer);
         current = deck[index];
         answered = false;
+        arriving = true;
         $("lesson").hidden = true;
         $("feedback").className = "feedback";
-        $("feedback").textContent = "Which bubble has the answer?";
+        $("feedback").textContent = "Here comes your whale with a new problem...";
         $("question-hint").textContent = "Can you help me?";
         $("equation").innerHTML = `${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = <span class="question-mark">?</span>`;
         $("equation").setAttribute("aria-label", `${current.a} ${OPERATIONS[current.op].spoken} ${current.b} equals what?`);
         $("practice-summary").textContent = `${OPERATIONS[current.op].name} \u00b7 ${settings.order === "shuffle" ? "Shuffle" : "Sequential"} \u00b7 Range ${settings.limit}`;
         $("round-label").textContent = `Fact ${index + 1} of ${deck.length} \u00b7 Round ${cycle}`;
+        $("answers").className = "answers awaiting";
         $("answers").replaceChildren();
         for (const value of makeChoices(current)) {
+          const slot = document.createElement("div");
+          slot.className = "answer-slot";
           const button = document.createElement("button");
           button.type = "button";
           button.className = "answer";
+          button.disabled = true;
           button.dataset.value = value;
           button.setAttribute("aria-label", `Answer ${value}`);
           button.textContent = value;
           button.addEventListener("click", () => answer(value));
-          $("answers").append(button);
+          slot.append(button);
+          $("answers").append(slot);
         }
         $("host").classList.remove("enter");
         void $("host").offsetWidth;
         $("host").classList.add("enter");
+        if (focusQuestion) $("equation").focus({ preventScroll: true });
+        if (reducedMotion.matches) revealAnswers();
+        else entranceTimer = setTimeout(revealAnswers, 1800);
         renderJourney();
       }
 
@@ -493,12 +694,13 @@
       }
 
       function answer(value) {
-        if (answered) return;
+        if (answered || arriving) return;
         answered = true;
+        $("answers").classList.add("answered");
         completed++;
         const isCorrect = value === current.answer;
         if (isCorrect) correct++;
-        for (const button of $("answers").children) {
+        for (const button of $("answers").querySelectorAll(".answer")) {
           const n = Number(button.dataset.value);
           button.disabled = true;
           if (n === current.answer || n === value) {
@@ -607,9 +809,8 @@
             if (deck.length > 1 && deck[0].key === current.key) [deck[0], deck[1]] = [deck[1], deck[0]];
           }
         }
-        renderQuestion();
-        $("answers").firstElementChild.focus({ preventScroll: true });
-        $("host").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "nearest" });
+        renderQuestion(true);
+        $("answers").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
       });
 
       function renderFocus() {
@@ -641,6 +842,7 @@
         for (const checkbox of document.querySelectorAll('[name="operation"]')) checkbox.checked = settings.operations.includes(checkbox.value);
         $("limit").value = settings.limit;
         for (const radio of document.querySelectorAll('[name="order"]')) radio.checked = radio.value === settings.order;
+        for (const radio of document.querySelectorAll('[name="palette"]')) radio.checked = radio.value === settings.palette;
         draftFocus = [...settings.focus];
         renderFocus();
         $("settings-error").hidden = true;
@@ -655,7 +857,8 @@
           operations: [...document.querySelectorAll('[name="operation"]:checked')].map(el => el.value),
           limit: Number($("limit").value),
           focus: [...draftFocus],
-          order: document.querySelector('[name="order"]:checked').value
+          order: document.querySelector('[name="order"]:checked').value,
+          palette: document.querySelector('[name="palette"]:checked').value
         };
         try { validateSettings(candidate); }
         catch (error) {
@@ -670,9 +873,8 @@
           notice("Your browser couldn't save settings. This practice still works, but settings will reset when you leave.");
         }
         $("settings").close();
-        startPractice();
-        $("answers").firstElementChild.focus({ preventScroll: true });
-        $("host").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "nearest" });
+        startPractice(true);
+        $("answers").scrollIntoView({ behavior: reducedMotion.matches ? "instant" : "smooth", block: "start" });
       });
       startPractice();
     }

@@ -8,7 +8,7 @@ const html = readFileSync(join(__dirname, "index.html"), "utf8");
 const source = html.match(/<script id="game-script">([\s\S]*?)<\/script>/)[1];
 const context = vm.createContext({});
 vm.runInContext(source, context);
-const { makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS } = context.WhaleMath;
+const { makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES } = context.WhaleMath;
 const operations = ["add", "subtract", "multiply", "divide"];
 const config = (limit, ops = operations, focus = [], order = "sequential") => ({ limit, operations: ops, focus, order });
 
@@ -32,7 +32,7 @@ test("every supported range generates correct, unique, nonnegative integer facts
   }
 });
 
-test("all facts have four unique numeric choices with exactly one correct answer", () => {
+test("all facts have four unique ascending choices with exactly one correct answer", () => {
   for (const f of makeFacts(config(20))) {
     for (const random of [() => 0, () => 0.99999, Math.random]) {
       const choices = makeChoices(f, random);
@@ -40,6 +40,7 @@ test("all facts have four unique numeric choices with exactly one correct answer
       assert.equal(new Set(choices).size, 4);
       assert.equal(choices.filter(n => n === f.answer).length, 1);
       assert.ok(choices.every(n => Number.isInteger(n) && n >= 0));
+      assert.ok(choices.every((n, i) => i === 0 || choices[i - 1] < n));
     }
   }
 });
@@ -126,4 +127,20 @@ test("invalid settings fail explicitly", () => {
     config(10, ["add"], [0]), config(10, ["add"], [2, 2]),
     config(10, ["add"], [], "invalid")
   ]) assert.throws(() => validateSettings(bad));
+});
+
+test("ocean is the default palette and older saved settings migrate without losing selections", () => {
+  assert.equal(DEFAULTS.palette, "ocean");
+  const old = config(12, ["multiply"], [2, 4], "sequential");
+  const upgraded = validateSettings(old);
+  assert.equal(upgraded.palette, "ocean");
+  assert.equal(upgraded.limit, 12);
+  assert.equal(upgraded.operations.join(","), "multiply");
+  assert.equal(upgraded.focus.join(","), "2,4");
+  assert.equal(upgraded.order, "sequential");
+  for (const palette of PALETTES) {
+    assert.equal(validateSettings({ ...old, palette }).palette, palette);
+  }
+  assert.throws(() => validateSettings({ ...old, palette: "invalid" }));
+  assert.throws(() => validateSettings({ ...old, palette: null }));
 });

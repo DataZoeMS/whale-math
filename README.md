@@ -8,8 +8,14 @@ tracking, dependencies, or installation.
 
 ## Play
 
-A friendly whale swims in with a problem. Tap one of four answer bubbles. Both
-correct and incorrect answers reveal the equation and an animated explanation:
+A humpback with broad tail flukes, a long moving flipper, and a pleated belly
+swims in from offscreen carrying the problem. Once it arrives, four answer
+bubbles rise into view and gently float **above** the whale. Tap a bubble to
+answer; the bubbles hold still while you explore the explanation. Each new
+problem repeats the swim-in entrance. Answer bubbles always run from **lowest
+to highest**, left to right.
+
+Both correct and incorrect answers reveal the equation and an animated explanation:
 
 - **Addition:** humpbacks and orcas start in separate groups, then swim together.
 - **Subtraction:** whales start together; the orcas leave and the humpbacks remain.
@@ -24,6 +30,13 @@ There is no timer or penalty for incorrect answers.
 
 ## Practice settings
 
+**Start practice** and **Close** stay together at the top of the settings panel,
+even when you scroll. Start practice applies your selections; Close dismisses
+the panel without changing your current practice.
+
+- Choose **Ocean blue** (the default), **Sea glass**, **Coral reef**, or
+  **Classic rose**. Each palette adapts to your device's light/dark appearance
+  and is saved with your other practice settings.
 - Choose any combination of the four operations. Addition and subtraction are
   selected initially.
 - The range defaults to **10**, with options **5, 10, 12, and 20**.
@@ -36,7 +49,7 @@ There is no timer or penalty for incorrect answers.
 - **Sequential** orders facts by operation (addition, subtraction,
   multiplication, division), focus number, and then ascending first operand.
 - **Shuffle** randomizes the same set, without repeats until every fact has
-  appeared. Answers are shuffled independently in either mode.
+  appeared. Answer bubbles stay in ascending numerical order in either mode.
 - Subtraction never produces negative answers. Division always produces whole
   numbers and never divides by zero. Zero facts are included where valid.
 
@@ -52,8 +65,10 @@ Correct and incorrect choices use text and different borders, not just color.
 Portrait, landscape, and small screens use responsive layouts.
 
 The game follows the device's light/dark appearance and reduced-motion setting.
-With reduced motion, the initial whale groups remain still until you tap
-**Show the result**; no automatic animation is required.
+With reduced motion, the whale and answer bubbles appear immediately and stay
+still. The initial explanation groups remain still until you tap
+**Show the result**; no automatic animation is required. Keyboard focus moves
+from the new problem to the answer bubbles when they become available.
 
 ## Development and hosting
 
