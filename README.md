@@ -26,7 +26,32 @@ Both correct and incorrect answers reveal the equation and an animated explanati
 Every illustrated whale represents exactly one. Even larger problems show the
 full total, not a capped sample. Empty groups are explicitly labeled zero.
 Use **Show the result**, **Replay whales**, and **Next problem** at your own pace.
-There is no timer or penalty for incorrect answers.
+There are no time limits or penalties for incorrect answers.
+
+## Optional learning tools
+
+Open either tool below the whale without restarting the problem or changing
+your score:
+
+- **Multiplication table:** a reference grid from zero through your selected
+  range, including every product. Row and column headers stay visible as you
+  scroll, and selected focus numbers are highlighted. The current problem is
+  repeated above the table so you can look up the answer yourself.
+- **Scratch pad:** draw with a finger, Apple Pencil, or mouse, or choose a
+  **Humpback stamp** or **Orca stamp** and tap to place one whale at a time.
+  Mix stamps and drawing to build your own groups. **Undo** removes the last
+  stroke or stamp; **Clear pad** removes everything. A count shows how many
+  humpbacks and orcas you have stamped.
+
+Both tools can stay open between problems. Scratch work survives closing the
+pad, changing questions, and resizing the browser, but is not saved after a
+reload or sent anywhere. For keyboard stamping, choose a whale, focus the pad,
+use arrow keys to position the stamp, and press Enter or Space.
+
+The optional **practice timer** counts up only when you press **Start**.
+**Stop** pauses it; Start resumes from the paused time. **Reset** stops the timer
+and returns it to zero. It continues across questions and setting changes, never
+limits the time to answer, and resets when the page is reloaded.
 
 ## Practice settings
 

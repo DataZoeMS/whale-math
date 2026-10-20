@@ -239,6 +239,35 @@
     .feedback { text-align: center; min-height: 32px; font-size: 16px; font-weight: 650; position: relative; }
     .feedback.good { color: var(--cp-success); }
     .feedback.try { color: var(--cp-text); }
+    .learning-tools, .scratch-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .practice-timer { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 12px; padding: 12px 16px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 12px; }
+    .timer-caption { font-size: 12px; color: var(--cp-text-muted); }
+    .timer-display { display: block; min-width: 120px; font: 700 28px Consolas, "Courier New", Courier, monospace; color: var(--cp-text); }
+    .practice-timer .button { min-width: 72px; padding: 10px 14px; }
+    .practice-timer .button:disabled { opacity: .5; cursor: default; }
+    .learning-tools .button[aria-expanded="true"], .scratch-toolbar .button[aria-pressed="true"] { background: var(--cp-accent); border-color: var(--cp-accent); color: var(--cp-accent-fg); }
+    .tool-panel { margin-top: 12px; padding: 20px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; }
+    .tool-panel h3 { margin: 0 0 8px; font-size: 21px; }
+    .tool-panel p { color: var(--cp-text-muted); font-size: 14px; line-height: 1.5; }
+    .tool-problem { font-weight: 750; color: var(--cp-accent) !important; font-size: 20px !important; }
+    .table-scroll { max-height: 360px; overflow: auto; border: 1px solid var(--cp-border); border-radius: 10px; overscroll-behavior: contain; }
+    .times-table { width: 100%; border-spacing: 0; font-variant-numeric: tabular-nums; text-align: center; }
+    .times-table th, .times-table td { min-width: 40px; height: 38px; padding: 8px; border-right: 1px solid var(--cp-border); border-bottom: 1px solid var(--cp-border); }
+    .times-table th { position: sticky; background: var(--cp-bg-elevated); color: var(--cp-text); }
+    .times-table thead th { top: 0; z-index: 2; }
+    .times-table tbody th { left: 0; z-index: 1; }
+    .times-table thead th:first-child { left: 0; z-index: 3; }
+    .times-table th.focus-number { background: var(--cp-accent); color: var(--cp-accent-fg); }
+    .scratch-toolbar { align-items: center; margin-bottom: 12px; }
+    .scratch-toolbar .button { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 12px; }
+    .scratch-toolbar .button:disabled { opacity: .5; }
+    .scratch-toolbar svg { width: 36px; height: 26px; pointer-events: none; }
+    .scratch-board { display: block; width: 100%; height: 320px; border: 2px solid var(--cp-border-strong); border-radius: 10px; background: var(--cp-bg-elevated); touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
+    .scratch-board [data-drawing], .scratch-board [data-cursor] { pointer-events: none; }
+    .scratch-stroke { fill: none; stroke: var(--cp-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .scratch-cursor { fill: none; stroke: var(--cp-accent); stroke-width: 2; stroke-dasharray: 4 4; }
+    .scratch-empty { fill: var(--cp-text-soft); font-size: 14px; text-anchor: middle; pointer-events: none; }
+    .scratch-summary { min-height: 24px; }
     .lesson { margin-top: 20px; padding: 24px; background: var(--cp-surface); border: 1px solid var(--cp-border); border-radius: 16px; }
     .lesson-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
     .lesson h3 { margin: 4px 0; font-size: 24px; letter-spacing: -.5px; }
@@ -338,8 +367,13 @@
     <defs>
       <symbol id="humpback" viewBox="0 0 360 210">
         <g class="tail-flukes">
-          <path fill="currentColor" d="M99 120C77 104 63 88 55 75 34 78 13 63 8 44 29 41 47 49 56 62 56 39 70 23 91 20 95 45 81 68 68 75 77 91 92 101 113 110Z"/>
-          <path d="M57 70C48 63 36 56 24 53M63 66C72 54 80 40 83 30" stroke="var(--cp-whale-detail)" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+          <path fill="currentColor" d="M58 84C59 100 76 114 100 120L113 109C91 103 80 94 77 83Z"/>
+          <path fill="currentColor" d="M4 48C10 56 23 53 32 55L36 53 40 56 44 54 49 57C56 58 61 59 65 62L68 69 72 62C84 58 96 56 108 55L112 53 116 55Q128 54 136 47C139 66 118 78 101 85L82 96Q70 102 55 95L35 83C17 74 4 64 4 48Z"/>
+          <path fill="var(--cp-whale-belly)" d="M13 57C34 62 52 61 61 67L68 77 77 67Q103 60 127 56C121 69 106 76 95 81L79 91Q69 96 58 90L41 80C28 74 18 66 13 57Z"/>
+          <g fill="currentColor">
+            <path d="M27 64Q35 62 39 68L35 73 29 70ZM100 65Q108 63 111 68L104 74 98 71ZM52 82L58 79 62 85 58 89Z"/>
+            <circle cx="46" cy="72" r="2"/><circle cx="85" cy="76" r="2.5"/>
+          </g>
         </g>
         <path fill="var(--cp-whale-detail)" d="M248 139C260 154 279 167 295 170 287 155 274 141 264 135Z"/>
         <path fill="currentColor" d="M79 103C102 101 124 90 141 81Q148 65 157 68 163 70 169 73C185 68 204 66 222 68 271 68 317 86 340 104 355 115 352 133 333 145 297 167 240 173 184 151 139 133 109 122 80 115Z"/>
@@ -390,7 +424,7 @@
         <div class="answers awaiting" id="answers" role="group" aria-label="Choose an answer bubble above the whale"></div>
         <div class="host" id="host">
           <div class="whale-carrier">
-            <svg class="big-whale" viewBox="0 0 360 210" role="img" aria-label="A humpback whale with broad tail flukes, a long flipper, and a pleated belly"><use href="#humpback"/></svg>
+            <svg class="big-whale" viewBox="0 0 360 210" role="img" aria-label="A humpback whale with wide horizontal tail flukes, a deep center notch, a long flipper, and a pleated belly"><use href="#humpback"/></svg>
             <div class="question">
               <div class="hint" id="question-hint">Can you help me?</div>
               <div class="equation" id="equation" tabindex="-1" aria-live="polite" aria-atomic="true"></div>
@@ -398,6 +432,43 @@
           </div>
         </div>
         <div class="feedback" id="feedback" role="status" aria-live="polite">Which bubble has the answer?</div>
+      </section>
+      <div class="learning-tools" aria-label="Optional learning tools">
+        <button type="button" class="button" id="table-toggle" aria-expanded="false" aria-controls="table-panel">Show multiplication table</button>
+        <button type="button" class="button" id="scratch-toggle" aria-expanded="false" aria-controls="scratch-panel">Show scratch pad</button>
+      </div>
+      <div class="practice-timer" role="group" aria-label="Optional practice timer">
+        <div><span class="timer-caption">Your timer, your pace</span><span class="timer-display" id="timer-display" role="timer" aria-label="Elapsed practice time" aria-live="off">00:00</span></div>
+        <button type="button" class="button" id="timer-start">Start</button>
+        <button type="button" class="button" id="timer-stop" disabled>Stop</button>
+        <button type="button" class="button" id="timer-reset" disabled title="Stop the timer and reset to zero">Reset</button>
+        <span id="timer-status" class="sr-only" role="status">Timer is stopped.</span>
+      </div>
+      <section class="tool-panel" id="table-panel" aria-labelledby="table-title" hidden>
+        <h3 id="table-title">Multiplication table</h3>
+        <p class="tool-problem" id="table-problem"></p>
+        <p id="table-instructions">Find the first number down the left side and the second across the top. Where they meet is the product.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable multiplication table">
+          <table class="times-table" id="times-table"></table>
+        </div>
+      </section>
+      <section class="tool-panel" id="scratch-panel" aria-labelledby="scratch-title" hidden>
+        <h3 id="scratch-title">Your whale scratch pad</h3>
+        <p class="tool-problem" id="scratch-problem"></p>
+        <p id="scratch-instructions">Draw with a finger, Apple Pencil, or mouse. Choose a whale stamp, then tap to add one whale. Your work stays until you clear it or reload.</p>
+        <div class="scratch-toolbar" role="group" aria-label="Scratch pad tools">
+          <button type="button" class="button" data-scratch-tool="draw" aria-pressed="true">Draw</button>
+          <button type="button" class="button" data-scratch-tool="humpback" aria-pressed="false"><svg class="humpback" aria-hidden="true"><use href="#humpback"/></svg>Humpback stamp</button>
+          <button type="button" class="button" data-scratch-tool="orca" aria-pressed="false"><svg class="orca" aria-hidden="true"><use href="#orca"/></svg>Orca stamp</button>
+          <button type="button" class="button" id="scratch-undo" disabled>Undo</button>
+          <button type="button" class="button" id="scratch-clear" disabled>Clear pad</button>
+        </div>
+        <svg class="scratch-board" id="scratch-board" role="img" aria-label="Drawing and whale stamping area" aria-describedby="scratch-instructions scratch-keyboard" tabindex="0">
+          <g data-drawing="" aria-hidden="true"></g>
+          <g data-cursor="" aria-hidden="true"></g>
+        </svg>
+        <p class="scratch-summary" id="scratch-summary" role="status">Your scratch pad is empty.</p>
+        <p id="scratch-keyboard">Keyboard stamping: select a whale, focus the pad, move with arrow keys, and press Enter or Space to stamp.</p>
       </section>
       <section class="lesson" id="lesson" aria-labelledby="lesson-title" hidden>
         <div class="lesson-top">
@@ -418,7 +489,7 @@
       </div>
       <p id="storage-notice" class="storage-notice" role="status" hidden></p>
     </main>
-    <footer class="footer">Made for curious minds and little flippers.<br>No timers, no ads, no accounts. <a href="https://github.com/DataZoeMS/whale-math">About this game</a></footer>
+    <footer class="footer">Made for curious minds and little flippers.<br>No time limits, no ads, no accounts. <a href="https://github.com/DataZoeMS/whale-math">About this game</a></footer>
   </div>
   <dialog class="settings" id="settings" aria-labelledby="settings-title">
     <form id="settings-form">
@@ -536,6 +607,22 @@
       return [...values].sort((a, b) => a - b);
     }
 
+    function makeMultiplicationTable(limit) {
+      if (!LIMITS.includes(limit)) throw new Error("Choose a supported table range.");
+      return Array.from({ length: limit + 1 }, (_, row) =>
+        Array.from({ length: limit + 1 }, (_, column) => row * column));
+    }
+
+    function formatElapsed(milliseconds) {
+      if (!Number.isFinite(milliseconds) || milliseconds < 0) throw new Error("Elapsed time must be a nonnegative number.");
+      const seconds = Math.floor(milliseconds / 1000);
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor(seconds / 60) % 60;
+      const parts = [minutes, seconds % 60].map(value => String(value).padStart(2, "0"));
+      if (hours) parts.unshift(String(hours).padStart(2, "0"));
+      return parts.join(":");
+    }
+
     function makeWhales(count, species, start = 0) {
       return Array.from({ length: count }, (_, i) => ({ id: start + i, species }));
     }
@@ -583,7 +670,7 @@
       return { before, after, start, finish, total: whales.length };
     }
 
-    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES });
+    globalThis.WhaleMath = Object.freeze({ makeFacts, makeChoices, makeMultiplicationTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES });
 
     if (typeof document !== "undefined") {
       const $ = id => document.getElementById(id);
@@ -619,8 +706,266 @@
         const facts = makeFacts(settings);
         deck = settings.order === "shuffle" ? shuffle(facts) : facts;
         index = 0; completed = 0; correct = 0; cycle = 1;
+        renderMultiplicationTable();
         renderQuestion(focusQuestion);
       }
+
+      function renderMultiplicationTable() {
+        const table = $("times-table");
+        table.replaceChildren();
+        const caption = document.createElement("caption");
+        caption.className = "sr-only";
+        caption.textContent = `Multiplication facts from zero through ${settings.limit}. Highlighted headers are your focus numbers.`;
+        const head = document.createElement("thead");
+        const headers = document.createElement("tr");
+        const corner = document.createElement("th");
+        corner.scope = "col";
+        corner.textContent = "\u00d7";
+        headers.append(corner);
+        for (let n = 0; n <= settings.limit; n++) {
+          const th = document.createElement("th");
+          th.scope = "col";
+          th.textContent = n;
+          if (settings.focus.includes(n)) th.className = "focus-number";
+          headers.append(th);
+        }
+        head.append(headers);
+        const body = document.createElement("tbody");
+        for (const [row, products] of makeMultiplicationTable(settings.limit).entries()) {
+          const tr = document.createElement("tr");
+          const label = document.createElement("th");
+          label.scope = "row";
+          label.textContent = row;
+          if (settings.focus.includes(row)) label.className = "focus-number";
+          tr.append(label);
+          for (const product of products) {
+            const cell = document.createElement("td");
+            cell.textContent = product;
+            tr.append(cell);
+          }
+          body.append(tr);
+        }
+        table.append(caption, head, body);
+      }
+
+      function updateToolProblems() {
+        const problem = `Your problem: ${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = ${answered ? current.answer : "?"}`;
+        $("table-problem").textContent = problem;
+        $("scratch-problem").textContent = problem;
+        $("table-instructions").textContent = current.op === "multiply"
+          ? "Find the first number down the left side and the second across the top. Where they meet is the product. Scroll to see more numbers."
+          : current.op === "divide"
+            ? `Find column ${current.b}, then look down it for ${current.a}. The row number is your answer. Scroll to see more numbers.`
+            : "This reference table is for multiplication and division. You can use the scratch pad to work through your addition or subtraction problem.";
+      }
+
+      let timerElapsed = 0, timerStartedAt = null, timerInterval = null;
+
+      function updateTimer() {
+        const elapsed = timerElapsed + (timerStartedAt === null ? 0 : performance.now() - timerStartedAt);
+        $("timer-display").textContent = formatElapsed(elapsed);
+        $("timer-start").disabled = timerStartedAt !== null;
+        $("timer-stop").disabled = timerStartedAt === null;
+        $("timer-reset").disabled = timerStartedAt === null && timerElapsed === 0;
+      }
+
+      function stopTimer() {
+        if (timerStartedAt !== null) timerElapsed += performance.now() - timerStartedAt;
+        timerStartedAt = null;
+        clearInterval(timerInterval);
+        timerInterval = null;
+        updateTimer();
+      }
+
+      $("timer-start").addEventListener("click", () => {
+        if (timerStartedAt !== null) return;
+        timerStartedAt = performance.now();
+        timerInterval = setInterval(updateTimer, 250);
+        updateTimer();
+        $("timer-status").textContent = "Timer running.";
+      });
+      $("timer-stop").addEventListener("click", () => {
+        stopTimer();
+        $("timer-status").textContent = `Timer stopped at ${$("timer-display").textContent}.`;
+      });
+      $("timer-reset").addEventListener("click", () => {
+        stopTimer();
+        timerElapsed = 0;
+        updateTimer();
+        $("timer-status").textContent = "Timer reset to zero and stopped.";
+      });
+      document.addEventListener("visibilitychange", updateTimer);
+
+      $("table-toggle").addEventListener("click", () => {
+        const show = $("table-panel").hidden;
+        $("table-panel").hidden = !show;
+        $("table-toggle").setAttribute("aria-expanded", String(show));
+        $("table-toggle").textContent = `${show ? "Hide" : "Show"} multiplication table`;
+      });
+
+      const scratchItems = [];
+      const board = $("scratch-board");
+      const drawing = board.querySelector("[data-drawing]");
+      const cursorLayer = board.querySelector("[data-cursor]");
+      let scratchTool = "draw", activePointer = null, activeStroke = null, activePath = null;
+      let scratchCursor = { x: .5, y: .5 }, showScratchCursor = false;
+
+      function svgElement(tag, attributes) {
+        const node = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value);
+        return node;
+      }
+
+      function scratchSize() {
+        return { width: board.clientWidth, height: board.clientHeight };
+      }
+
+      function strokePath(points, size) {
+        return points.map((point, i) => `${i ? "L" : "M"}${point.x * size.width} ${point.y * size.height}`).join(" ") + (points.length === 1 ? " l .01 0" : "");
+      }
+
+      function updateScratchSummary() {
+        const humpbacks = scratchItems.filter(item => item.type === "humpback").length;
+        const orcas = scratchItems.filter(item => item.type === "orca").length;
+        const strokes = scratchItems.filter(item => item.type === "stroke").length;
+        $("scratch-summary").textContent = scratchItems.length
+          ? `${humpbacks} humpbacks + ${orcas} orcas = ${humpbacks + orcas} stamped whales. ${strokes} drawing ${strokes === 1 ? "stroke" : "strokes"}.`
+          : "Your scratch pad is empty.";
+        $("scratch-undo").disabled = scratchItems.length === 0 || activePointer !== null;
+        $("scratch-clear").disabled = scratchItems.length === 0 || activePointer !== null;
+      }
+
+      function renderScratch() {
+        const size = scratchSize();
+        if (!size.width || $("scratch-panel").hidden) return;
+        board.setAttribute("viewBox", `0 0 ${size.width} ${size.height}`);
+        drawing.replaceChildren();
+        cursorLayer.replaceChildren();
+        for (const item of scratchItems) {
+          if (item.type === "stroke") {
+            const path = svgElement("path", { class: "scratch-stroke", d: strokePath(item.points, size) });
+            drawing.append(path);
+            if (item === activeStroke) activePath = path;
+          } else {
+            const x = Math.max(40, Math.min(size.width - 40, item.x * size.width));
+            const y = Math.max(24, Math.min(size.height - 24, item.y * size.height));
+            const stamp = svgElement("svg", {
+              x: x - 40, y: y - 24,
+              width: 80, height: 48, class: item.type,
+              viewBox: item.type === "humpback" ? "0 0 360 210" : "0 0 180 110"
+            });
+            stamp.append(svgElement("use", { href: `#${item.type}` }));
+            drawing.append(stamp);
+          }
+        }
+        if (!scratchItems.length) {
+          const empty = svgElement("text", { x: size.width / 2, y: size.height / 2, class: "scratch-empty" });
+          empty.textContent = "Draw here or tap to stamp a whale.";
+          drawing.append(empty);
+        }
+        if (showScratchCursor && scratchTool !== "draw") {
+          cursorLayer.append(svgElement("rect", {
+            x: scratchCursor.x * size.width - 40, y: scratchCursor.y * size.height - 24,
+            width: 80, height: 48, rx: 8, class: "scratch-cursor"
+          }));
+        }
+      }
+
+      function finishScratchStroke() {
+        if (activePointer === null) return;
+        const pointer = activePointer;
+        activePointer = null;
+        activeStroke = null;
+        activePath = null;
+        if (board.hasPointerCapture(pointer)) board.releasePointerCapture(pointer);
+        updateScratchSummary();
+      }
+
+      function addWhaleStamp(point) {
+        const size = scratchSize();
+        const x = Math.max(40 / size.width, Math.min(1 - 40 / size.width, point.x));
+        const y = Math.max(24 / size.height, Math.min(1 - 24 / size.height, point.y));
+        scratchItems.push({ type: scratchTool, x, y });
+        scratchCursor = { x, y };
+        renderScratch();
+        updateScratchSummary();
+      }
+
+      function scratchPoint(event) {
+        const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(board.getScreenCTM().inverse());
+        const size = scratchSize();
+        return { x: Math.max(0, Math.min(1, point.x / size.width)), y: Math.max(0, Math.min(1, point.y / size.height)) };
+      }
+
+      board.addEventListener("pointerdown", event => {
+        if (!event.isPrimary || event.button !== 0 || activePointer !== null) return;
+        event.preventDefault();
+        showScratchCursor = false;
+        const point = scratchPoint(event);
+        if (scratchTool !== "draw") { addWhaleStamp(point); return; }
+        activePointer = event.pointerId;
+        activeStroke = { type: "stroke", points: [point] };
+        scratchItems.push(activeStroke);
+        board.setPointerCapture(event.pointerId);
+        renderScratch();
+        updateScratchSummary();
+      });
+      board.addEventListener("pointermove", event => {
+        if (event.pointerId !== activePointer) return;
+        event.preventDefault();
+        activeStroke.points.push(scratchPoint(event));
+        activePath.setAttribute("d", strokePath(activeStroke.points, scratchSize()));
+      });
+      board.addEventListener("pointerup", event => {
+        if (event.pointerId === activePointer) finishScratchStroke();
+      });
+      board.addEventListener("pointercancel", event => {
+        if (event.pointerId === activePointer) finishScratchStroke();
+      });
+      board.addEventListener("lostpointercapture", finishScratchStroke);
+      board.addEventListener("keydown", event => {
+        if (scratchTool === "draw") return;
+        const deltas = { ArrowLeft: [-.05, 0], ArrowRight: [.05, 0], ArrowUp: [0, -.05], ArrowDown: [0, .05] };
+        if (Object.hasOwn(deltas, event.key)) {
+          event.preventDefault();
+          const [dx, dy] = deltas[event.key];
+          scratchCursor = { x: Math.max(.15, Math.min(.85, scratchCursor.x + dx)), y: Math.max(.1, Math.min(.9, scratchCursor.y + dy)) };
+          showScratchCursor = true;
+          renderScratch();
+        } else if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          showScratchCursor = true;
+          addWhaleStamp(scratchCursor);
+        }
+      });
+      for (const button of document.querySelectorAll("[data-scratch-tool]")) {
+        button.addEventListener("click", () => {
+          finishScratchStroke();
+          scratchTool = button.dataset.scratchTool;
+          showScratchCursor = false;
+          for (const choice of document.querySelectorAll("[data-scratch-tool]")) choice.setAttribute("aria-pressed", String(choice === button));
+          renderScratch();
+        });
+      }
+      $("scratch-undo").addEventListener("click", () => {
+        scratchItems.pop();
+        renderScratch();
+        updateScratchSummary();
+      });
+      $("scratch-clear").addEventListener("click", () => {
+        scratchItems.length = 0;
+        renderScratch();
+        updateScratchSummary();
+      });
+      $("scratch-toggle").addEventListener("click", () => {
+        finishScratchStroke();
+        const show = $("scratch-panel").hidden;
+        $("scratch-panel").hidden = !show;
+        $("scratch-toggle").setAttribute("aria-expanded", String(show));
+        $("scratch-toggle").textContent = `${show ? "Hide" : "Show"} scratch pad`;
+        if (show) renderScratch();
+      });
+      new ResizeObserver(renderScratch).observe(board);
 
       function revealAnswers() {
         if (!arriving) return;
@@ -654,6 +999,7 @@
         $("question-hint").textContent = "Can you help me?";
         $("equation").innerHTML = `${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = <span class="question-mark">?</span>`;
         $("equation").setAttribute("aria-label", `${current.a} ${OPERATIONS[current.op].spoken} ${current.b} equals what?`);
+        updateToolProblems();
         $("practice-summary").textContent = `${OPERATIONS[current.op].name} \u00b7 ${settings.order === "shuffle" ? "Shuffle" : "Sequential"} \u00b7 Range ${settings.limit}`;
         $("round-label").textContent = `Fact ${index + 1} of ${deck.length} \u00b7 Round ${cycle}`;
         $("answers").className = "answers awaiting";
@@ -718,6 +1064,7 @@
         $("question-hint").textContent = isCorrect ? "A whale of a discovery!" : "Let's learn together!";
         $("equation").textContent = `${current.a} ${OPERATIONS[current.op].symbol} ${current.b} = ${current.answer}`;
         $("equation").setAttribute("aria-label", `${current.a} ${OPERATIONS[current.op].spoken} ${current.b} equals ${current.answer}`);
+        updateToolProblems();
         $("lesson-title").textContent = $("equation").textContent;
         $("lesson").hidden = false;
         renderJourney();

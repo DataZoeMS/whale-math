@@ -8,7 +8,7 @@ const html = readFileSync(join(__dirname, "index.html"), "utf8");
 const source = html.match(/<script id="game-script">([\s\S]*?)<\/script>/)[1];
 const context = vm.createContext({});
 vm.runInContext(source, context);
-const { makeFacts, makeChoices, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES } = context.WhaleMath;
+const { makeFacts, makeChoices, makeMultiplicationTable, formatElapsed, explanation, shuffle, validateSettings, DEFAULTS, LIMITS, PALETTES } = context.WhaleMath;
 const operations = ["add", "subtract", "multiply", "divide"];
 const config = (limit, ops = operations, focus = [], order = "sequential") => ({ limit, operations: ops, focus, order });
 
@@ -143,4 +143,28 @@ test("ocean is the default palette and older saved settings migrate without losi
   }
   assert.throws(() => validateSettings({ ...old, palette: "invalid" }));
   assert.throws(() => validateSettings({ ...old, palette: null }));
+});
+
+test("the reference multiplication table contains every product including zeros", () => {
+  for (const limit of LIMITS) {
+    const rows = makeMultiplicationTable(limit);
+    assert.equal(rows.length, limit + 1);
+    for (let row = 0; row <= limit; row++) {
+      assert.equal(rows[row].length, limit + 1);
+      for (let column = 0; column <= limit; column++) {
+        assert.equal(rows[row][column], row * column);
+      }
+    }
+    assert.equal(rows[limit][limit], limit * limit);
+  }
+  assert.throws(() => makeMultiplicationTable(100));
+});
+
+test("the optional timer formats elapsed time without rounding up or wrapping hours", () => {
+  for (const [milliseconds, expected] of [
+    [0, "00:00"], [999, "00:00"], [1000, "00:01"], [59999, "00:59"],
+    [60000, "01:00"], [3599999, "59:59"], [3600000, "01:00:00"],
+    [3661000, "01:01:01"], [360000000, "100:00:00"]
+  ]) assert.equal(formatElapsed(milliseconds), expected);
+  for (const invalid of [-1, NaN, Infinity]) assert.throws(() => formatElapsed(invalid));
 });
