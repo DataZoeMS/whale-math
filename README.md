@@ -37,9 +37,11 @@ your score:
   addition, subtraction, multiplication, or division problem. Find the first
   number down the side and the second across the top to look up the answer.
   Headers stay visible as you scroll, and selected focus numbers are highlighted.
-  Tap a number down the left side to highlight its entire row. Tap another to
-  move the highlight, or the same number again to clear it. Row headers also
-  support keyboard activation. The selection clears when a new problem starts.
+  Tap a number down the left side to highlight its entire row, or a number
+  across the top to highlight its column. Both selections can be active, with
+  their intersection emphasized. Tap another header to move that selection,
+  or the same header again to clear it without clearing the other axis.
+  Headers support keyboard activation. Selections clear with each new problem.
   Division includes the larger starting numbers needed for your selected facts;
   dashes mark non-whole-number division or subtraction below zero. The current
   problem is repeated above the table.
